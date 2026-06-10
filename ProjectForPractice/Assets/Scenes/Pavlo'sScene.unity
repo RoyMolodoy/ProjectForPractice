@@ -537,7 +537,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1520831054}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.12, y: -2.3, z: 0}
+  m_LocalPosition: {x: 6.16, y: -0.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -705,18 +705,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 179231395700456892, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
-      propertyPath: m_Interpolate
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 179231395700456892, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
-      propertyPath: m_GravityScale
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 179231395700456892, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2701647467469336608, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
       propertyPath: groundCheck
       value: 
@@ -738,10 +726,6 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2701647467469336608, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
-      propertyPath: obstacleLayer.m_Bits
-      value: 64
-      objectReference: {fileID: 0}
-    - target: {fileID: 2701647467469336608, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
       propertyPath: obstacleCheckDistance
       value: 2
       objectReference: {fileID: 0}
@@ -752,10 +736,6 @@ PrefabInstance:
     - target: {fileID: 2701647467469336608, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
       propertyPath: minPlayerDistanceToJump
       value: 3.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3468492328437909695, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
-      propertyPath: m_IsTrigger
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4984770944734211049, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
       propertyPath: m_RootOrder
