@@ -7,11 +7,6 @@ public class PlayerHP : MonoBehaviour
     public int playerHP = 3;
     public int MaxHP = 3;
 
-    void Start()
-    {
-        
-    }
-
     void MinusHP(int minusHP)
     {
         playerHP -= minusHP;
@@ -24,9 +19,9 @@ public class PlayerHP : MonoBehaviour
     void PlusHP(int plusHP)
     {
        if (playerHP < MaxHP)
-        {
+       {
             playerHP += plusHP;
-        }
+       }
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
