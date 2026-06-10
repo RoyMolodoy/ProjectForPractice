@@ -3,11 +3,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Movement")]
     public float moveSpeed = 8f;
 
-    [Header("Jump")]
-    [Tooltip("If true, jumpForce is applied as an instant velocity; otherwise as an impulse force.")]
     public bool useVelocityJump = true;
     public float jumpForce = 14f;
     public Transform groundCheck;
@@ -17,73 +14,69 @@ public class PlayerMovement : MonoBehaviour
     [Header("Debug")]
     public bool debugDraw = true;
 
+    [Header("Animation")]
+    [SerializeField] AnimsController animsController;
+    [SerializeField] float animHorizontalDeadzone = 0.1f;
+
+    [Header("Flip")]
+    [SerializeField] float flipDeadzone = 0.1f;
+
+    [Header("Fall settings")]
+    [SerializeField] float fallThreshold = -0.1f;
+
     Rigidbody2D rb;
     float horizontal;
     bool jumpRequest;
     bool isGrounded;
 
+    bool facingRight = true;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
 
-        // Попробуем автоматически разместить groundCheck под игроком по Collider2D
-        if (groundCheck == null)
-        {
-            var go = new GameObject("GroundCheck");
-            go.transform.parent = transform;
-
-            var col = GetComponent<Collider2D>();
-            if (col != null)
-            {
-                // ставим немного ниже контура коллайдера
-                var offsetY = -(col.bounds.extents.y + 0.05f);
-                go.transform.localPosition = new Vector3(0, offsetY, 0);
-            }
-            else
-            {
-                go.transform.localPosition = new Vector3(0, -0.5f, 0);
-            }
-
-            groundCheck = go.transform;
-        }
-
-        // Предупреждения для распространённых проблем
         if (rb.bodyType != RigidbodyType2D.Dynamic)
             Debug.LogWarning($"{name}: Rigidbody2D должен быть Dynamic для прыжка (текущий тип: {rb.bodyType}).", this);
 
-        // Если groundLayer не задан — предупреждение (частая причина "не работает прыжок")
         if (groundLayer.value == 0)
             Debug.LogWarning($"{name}: LayerMask groundLayer не задан. Установите слой(и) земли или задайте маску.", this);
+
+        if (animsController == null)
+            animsController = GetComponentInChildren<AnimsController>();
+
+        if (animsController == null && debugDraw)
+            Debug.LogWarning($"{name}: AnimsController не найден. Привяжите в инспекторе.", this);
+
+        facingRight = Mathf.Approximately(transform.localEulerAngles.y, 0f);
     }
 
     void Update()
     {
-        horizontal = Input.GetAxisRaw("Horizontal"); // -1,0,1
+        horizontal = Input.GetAxisRaw("Horizontal");
 
         if (Input.GetButtonDown("Jump"))
             jumpRequest = true;
+
+        HandleFlip();
     }
 
     void FixedUpdate()
     {
-        int mask = (groundLayer.value == 0) ? ~0 : groundLayer.value; // если не задан - проверяем все слои
+        int mask = (groundLayer.value == 0) ? ~0 : groundLayer.value;
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, mask);
 
-        // Движение по X
         rb.velocity = new Vector2(horizontal * moveSpeed, rb.velocity.y);
 
         if (jumpRequest)
         {
             if (isGrounded)
             {
-                // Выполняем прыжок
                 if (useVelocityJump)
                 {
                     rb.velocity = new Vector2(rb.velocity.x, jumpForce);
                 }
                 else
                 {
-                    // Сбрасываем вертикальную скорость, затем импульс
                     rb.velocity = new Vector2(rb.velocity.x, 0f);
                     rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                 }
@@ -96,23 +89,55 @@ public class PlayerMovement : MonoBehaviour
 
             jumpRequest = false;
         }
+
+        UpdateAnimations();
     }
 
-    void OnDrawGizmos()
+    void HandleFlip()
     {
-        if (!debugDraw) return;
-
-        if (groundCheck == null)
+        if (horizontal < -flipDeadzone && facingRight)
         {
-            // Попытка найти child GroundCheck для отрисовки если есть
-            var t = transform.Find("GroundCheck");
-            if (t != null) groundCheck = t;
+            transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, 180f, transform.localEulerAngles.z);
+            facingRight = false;
+        }
+        else if (horizontal > flipDeadzone && !facingRight)
+        {
+            transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, 0f, transform.localEulerAngles.z);
+            facingRight = true;
+        }
+    }
+
+    void UpdateAnimations()
+    {
+        if (animsController == null)
+            return;
+
+        bool moving = Mathf.Abs(horizontal) > animHorizontalDeadzone;
+        animsController.SetRunning(moving && isGrounded);
+
+        if (isGrounded)
+        {
+            animsController.SetJumping(false);
+            animsController.SetFalling(false);
+            return;
         }
 
-        if (groundCheck != null)
+        float vy = rb.velocity.y;
+
+        if (vy > 0.05f)
         {
-            Gizmos.color = isGrounded ? Color.green : Color.yellow;
-            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+            animsController.SetJumping(true);
+            animsController.SetFalling(false);
+        }
+        else if (vy < fallThreshold)
+        {
+            animsController.SetJumping(false);
+            animsController.SetFalling(true);
+        }
+        else
+        {
+            animsController.SetJumping(false);
+            animsController.SetFalling(false);
         }
     }
 }
