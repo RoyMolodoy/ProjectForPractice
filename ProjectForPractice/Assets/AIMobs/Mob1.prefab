@@ -101,6 +101,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 3
   stopDistance: 1.5
+  groundCheck: {fileID: 0}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  groundCheckRadius: 1
+  jumpForce: 7
+  verticalJumpThreshold: 0.25
+  maxObstacleHeight: 0.6
+  airControlFactor: 0.5
   attackRange: 1.6
   attackCooldown: 1.2
   damage: 10

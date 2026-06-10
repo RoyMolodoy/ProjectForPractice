@@ -1,91 +1,100 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class MobAI : MonoBehaviour
 {
     [Header("Movement")]
-    public float moveSpeed = 3f;
-    public float stopDistance = 0.8f;
+    [SerializeField] private float moveSpeed = 3f;
+    [SerializeField] private float stopDistance = 0.8f;
 
-    [Header("Attack")]
-    public float attackRange = 1f;
-    public float attackCooldown = 1.2f;
-    public int damage = 10;
+    [Header("Vision (Line of Sight)")]
+    [SerializeField] private float visionRange = 10f; // Максимальна дальність зору
+    [SerializeField] private LayerMask obstacleLayer; // Шар, який блокує зір (стіни, земля)
+    [SerializeField] private Vector2 eyeOffset = new Vector2(0f, 0.5f); // Зміщення "очей", щоб промінь не чіпляв підлогу
 
-    Transform player;
-    Rigidbody2D rb;
-    float lastAttackTime;
+    private Rigidbody2D _rb;
+    private Transform _player;
 
-    void Start()
+    private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
+        _rb = GetComponent<Rigidbody2D>();
+    }
 
-        var go = GameObject.FindGameObjectWithTag("Player");
-        if (go != null)
-            player = go.transform;
-        else
+    private void Start()
+    {
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null)
         {
-            var pm = FindObjectOfType<PlayerMovement>();
-            if (pm != null)
-                player = pm.transform;
+            _player = playerObj.transform;
         }
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        if (player == null) return;
+        if (_player == null) return;
 
-        Vector2 pos = rb.position;
-        Vector2 target = player.position;
-        Vector2 dir = target - pos;
-        float dist = dir.magnitude;
-
-        if (dist > stopDistance)
+        // Перевіряємо, чи бачимо гравця
+        if (CanSeePlayer())
         {
-            Vector2 move = dir.normalized * moveSpeed * Time.fixedDeltaTime;
-            rb.MovePosition(pos + move);
+            ChasePlayer();
         }
-
-        // ������� ������� ������/���� �� ������� ������
-        if (player.position.x - transform.position.x > 0)
-            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
         else
-            transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
-    }
-
-    void Update()
-    {
-        if (player == null) return;
-
-        if (Time.time - lastAttackTime >= attackCooldown)
         {
-            float dist = Vector2.Distance(transform.position, player.position);
-            /*if (dist <= attackRange)
-                Attack();*/
+            // Якщо не бачимо - просто стоїмо (або тут можна додати логіку патрулювання)
+            StopMoving();
         }
     }
 
-    /*void Attack()
+    private bool CanSeePlayer()
     {
-        lastAttackTime = Time.time;
+        // 1. Перевірка дистанції: якщо гравець занадто далеко, ми його не бачимо
+        float distanceToPlayer = Vector2.Distance(transform.position, _player.position);
+        if (distanceToPlayer > visionRange)
+        {
+            return false;
+        }
 
-        // ���� � ������ � PlayerHealth � ��������� TakeDamage, ������ ������������� SendMessage (������'������)
-        var ph = player.GetComponent<PlayerHealth>();
-        if (ph != null)
-            ph.TakeDamage(damage);
+        // 2. Визначаємо точки початку (очі моба) і кінця (центр гравця) променя зору
+        Vector2 startPos = (Vector2)transform.position + eyeOffset;
+        Vector2 targetPos = (Vector2)_player.position + eyeOffset; // Припускаємо, що у гравця центр теж трохи вище ніг
+
+        // 3. Кидаємо лінію (Linecast) між мобом і гравцем
+        // Якщо лінія врізається в obstacleLayer (стіну), повертається true
+        RaycastHit2D hit = Physics2D.Linecast(startPos, targetPos, obstacleLayer);
+
+        // Малюємо промінь для дебагу: Червоний - не бачить, Зелений - бачить
+        if (hit.collider != null)
+        {
+            Debug.DrawLine(startPos, hit.point, Color.red);
+            return false; // Зір заблоковано стіною
+        }
         else
-            player.SendMessage("TakeDamage", damage, SendMessageOptions.DontRequireReceiver);
+        {
+            Debug.DrawLine(startPos, targetPos, Color.green);
+            return true; // Шлях вільний, бачимо гравця
+        }
+    }
 
-        // ��� ����� ������ �������� �����, ���� ��� �������������
-    }*/
-
-    void OnDrawGizmosSelected()
+    private void ChasePlayer()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, stopDistance);
+        float distanceToPlayer = Vector2.Distance(transform.position, _player.position);
+
+        // Зупиняємось, якщо підійшли впритул
+        if (distanceToPlayer <= stopDistance)
+        {
+            StopMoving();
+            return;
+        }
+
+        // Визначаємо напрямок: 1 (вправо) або -1 (вліво)
+        float directionX = Mathf.Sign(_player.position.x - transform.position.x);
+
+        // Рухаємось
+        _rb.velocity = new Vector2(directionX * moveSpeed, _rb.velocity.y);
+    }
+
+    private void StopMoving()
+    {
+        _rb.velocity = new Vector2(0f, _rb.velocity.y);
     }
 }
