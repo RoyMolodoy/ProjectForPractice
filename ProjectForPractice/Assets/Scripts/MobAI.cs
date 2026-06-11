@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -22,10 +23,20 @@ public class MobAI : MonoBehaviour
     [SerializeField] private float verticalThreshold = 0.1f; // поріг по Y для стрибка/падіння анімацій
     [SerializeField] private float flipDeadzone = 0.05f;
 
+    [Header("Attack")]
+    [SerializeField] private float attackRange = 0.8f;
+    [SerializeField] private float attackCooldown = 1.0f;
+    [SerializeField] private int damage = 1;
+    [SerializeField] private float attackDuration = 0.6f; // тривалість анімації атаки
+    [SerializeField] private float attackHitDelay = 0.2f; // використовуется як запасний таймер, но основной — Animation Event
+
     private Rigidbody2D _rb;
     private Transform _player;
     private bool facingRight = true;
     private bool isGrounded;
+    private float _lastAttackTime = -999f;
+    private bool _isAttacking = false;
+    private bool _isMoving = false;
 
     private void Awake()
     {
@@ -41,6 +52,22 @@ public class MobAI : MonoBehaviour
 
         if (animsController == null)
             animsController = GetComponent<AnimsController>();
+
+        // Подписка на события анимаций (безопасно, проверяем null)
+        if (animsController != null)
+        {
+            animsController.OnAttackHit += HandleAttackHit;
+            animsController.OnAttackEnd += HandleAttackEnd;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (animsController != null)
+        {
+            animsController.OnAttackHit -= HandleAttackHit;
+            animsController.OnAttackEnd -= HandleAttackEnd;
+        }
     }
 
     private void Start()
@@ -55,6 +82,12 @@ public class MobAI : MonoBehaviour
     private void FixedUpdate()
     {
         if (_player == null) return;
+        if (_isAttacking) // під час атаки рух дозволяти не будемо
+        {
+            _rb.velocity = new Vector2(0f, _rb.velocity.y);
+            UpdateAnimations();
+            return;
+        }
 
         // Ground check
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
@@ -76,30 +109,23 @@ public class MobAI : MonoBehaviour
 
     private bool CanSeePlayer()
     {
-        // 1. Перевірка дистанції: якщо гравець занадто далеко, ми його не бачимо
         float distanceToPlayer = Vector2.Distance(transform.position, _player.position);
-        if (distanceToPlayer > visionRange)
-        {
-            return false;
-        }
+        if (distanceToPlayer > visionRange) return false;
 
-        // 2. Визначаємо точки початку (очі моба) і кінця (центр гравця) променя зору
         Vector2 startPos = (Vector2)transform.position + eyeOffset;
-        Vector2 targetPos = (Vector2)_player.position + eyeOffset; // Припускаємо, що у гравця центр теж трохи вище ніг
+        Vector2 targetPos = (Vector2)_player.position + eyeOffset;
 
-        // 3. Кидаємо лінію (Linecast) між мобом і гравцем
         RaycastHit2D hit = Physics2D.Linecast(startPos, targetPos, obstacleLayer);
 
-        // Малюємо промінь для дебагу: Червоний - не бачить, Зелений - бачить
         if (hit.collider != null)
         {
             Debug.DrawLine(startPos, hit.point, Color.red);
-            return false; // Зір заблоковано стіною
+            return false;
         }
         else
         {
             Debug.DrawLine(startPos, targetPos, Color.green);
-            return true; // Шлях вільний, бачимо гравця
+            return true;
         }
     }
 
@@ -107,41 +133,120 @@ public class MobAI : MonoBehaviour
     {
         float distanceToPlayer = Vector2.Distance(transform.position, _player.position);
 
-        // Зупиняємось, якщо підійшли впритул
         if (distanceToPlayer <= stopDistance)
         {
             StopMoving();
+            TryAttack();
             return;
         }
 
-        // Визначаємо напрямок: 1 (вправо) або -1 (вліво)
         float directionX = Mathf.Sign(_player.position.x - transform.position.x);
-
-        // Рухаємось (через velocity, щоб працювала фізика та анімації)
         _rb.velocity = new Vector2(directionX * moveSpeed, _rb.velocity.y);
+
+        // Устанавливаем флаг движения и запускаем анимацию бега через контроллер
+        if (!_isMoving)
+        {
+            _isMoving = true;
+            animsController?.SetRunning(true);
+        }
+    }
+
+    private void TryAttack()
+    {
+        if (_isAttacking) return;
+        if (Time.time - _lastAttackTime < attackCooldown) return;
+        if (_player == null) return;
+
+        float distanceToPlayer = Vector2.Distance(transform.position, _player.position);
+        if (distanceToPlayer > attackRange) return;
+
+        FacePlayerInstant();
+
+        _lastAttackTime = Time.time;
+        StartCoroutine(DoAttackCoroutine());
+    }
+
+    private System.Collections.IEnumerator DoAttackCoroutine()
+    {
+        _isAttacking = true;
+
+        animsController?.SetRunning(false);
+        animsController?.SetAttacking(true);
+
+        _rb.velocity = new Vector2(0f, _rb.velocity.y);
+
+        if (attackHitDelay > 0f)
+            yield return new WaitForSeconds(attackHitDelay);
+
+        float distanceToPlayer = Vector2.Distance(transform.position, _player.position);
+        if (distanceToPlayer <= attackRange)
+            _player.gameObject.SendMessage("MinusHP", damage, SendMessageOptions.DontRequireReceiver);
+
+        float remaining = Mathf.Max(0f, attackDuration - attackHitDelay);
+        if (remaining > 0f)
+            yield return new WaitForSeconds(remaining);
+
+        animsController?.ResetAttackBool();
+        _isAttacking = false;
     }
 
     private void StopMoving()
     {
         _rb.velocity = new Vector2(0f, _rb.velocity.y);
+
+        if (_isMoving)
+        {
+            _isMoving = false;
+            animsController?.SetRunning(false);
+        }
+    }
+
+    // Обработчик, вызываемый из AnimsController при событии попадания в анимации
+    private void HandleAttackHit()
+    {
+        if (!_isAttacking || _player == null) return;
+
+        float distanceToPlayer = Vector2.Distance(transform.position, _player.position);
+        if (distanceToPlayer <= attackRange)
+        {
+            _player.gameObject.SendMessage("MinusHP", damage, SendMessageOptions.DontRequireReceiver);
+        }
+    }
+
+    // Обработчик конца анимации (если нужно)
+    private void HandleAttackEnd()
+    {
+        _isAttacking = false;
+    }
+
+    private void FacePlayerInstant()
+    {
+        if (_player == null) return;
+        bool playerIsRight = _player.position.x > transform.position.x;
+        Vector3 e = transform.localEulerAngles;
+        e.y = playerIsRight ? 180f : 0f;
+        transform.localEulerAngles = e;
+        facingRight = playerIsRight;
     }
 
     private void HandleFlip()
     {
+        if (_isAttacking) return;
+
         float horizontal = _rb.velocity.x;
 
         if (horizontal < -flipDeadzone && facingRight)
         {
             facingRight = false;
             Vector3 e = transform.localEulerAngles;
-            e.y = 180f;
+            e.y = 0f;
             transform.localEulerAngles = e;
         }
         else if (horizontal > flipDeadzone && !facingRight)
         {
             facingRight = true;
             Vector3 e = transform.localEulerAngles;
-            e.y = 0f;
+            e.y = 180f;
             transform.localEulerAngles = e;
         }
     }
@@ -153,15 +258,13 @@ public class MobAI : MonoBehaviour
         float horizontal = Mathf.Abs(_rb.velocity.x);
         float vertical = _rb.velocity.y;
 
-        // running: коли є горизонтальний рух і ми на землі
-        bool isRunning = horizontal > runThreshold && isGrounded;
+        // running: теперь учитываем флаг _isMoving, а не только скорость и isGrounded
+        bool isRunning = _isMoving && !_isAttacking;
         animsController.SetRunning(isRunning);
 
-        // jumping: коли вертикальна швидкість позитивна і не на землі
         bool isJumping = vertical > verticalThreshold && !isGrounded;
         animsController.SetJumping(isJumping);
 
-        // falling: коли вертикальна швидкість негативна і не на землі
         bool isFalling = vertical < -verticalThreshold && !isGrounded;
         animsController.SetFalling(isFalling);
     }
@@ -169,7 +272,7 @@ public class MobAI : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, 0.2f); // простий візуал для моба
+        Gizmos.DrawWireSphere(transform.position, 0.2f);
 
         if (groundCheck != null)
         {
@@ -177,8 +280,10 @@ public class MobAI : MonoBehaviour
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
 
-        // vision range
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, visionRange);
+
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 }
