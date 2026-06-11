@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,14 +12,11 @@ public class AnimsController : MonoBehaviour
 
     [Header("Attack")]
     [SerializeField] string attackingBoolParam = "isAttacking";
-
+    [SerializeField] public string isPlayerAttacking1 = "isPlayerAttacking1";
+    [SerializeField] public  string isPlayerAttacking2 = "isPlayerAttacking2";
     [Header("Debug")]
     [SerializeField] bool debugLogs = false;
-
-    // Кеш имен параметров Animator для быстрой проверки
     private HashSet<string> _animParams;
-
-    // События для внешних подписчиков (например MobAI)
     public event Action OnAttackHit;
     public event Action OnAttackEnd;
 
@@ -30,11 +27,8 @@ public class AnimsController : MonoBehaviour
 
         if (animator == null)
         {
-            Debug.LogWarning($"{name}: Animator не найден в {nameof(AnimsController)}. Привяжите Animator в инспекторе.", this);
             return;
         }
-
-        // Собираем параметры в HashSet для быстрых проверок
         _animParams = new HashSet<string>();
         foreach (var p in animator.parameters)
             _animParams.Add(p.name);
@@ -49,7 +43,6 @@ public class AnimsController : MonoBehaviour
     {
         if (!HasParam(runningParam))
         {
-            if (debugLogs) Debug.LogWarning($"{name}: Animator не содержит параметр '{runningParam}'", this);
             return;
         }
 
@@ -61,7 +54,6 @@ public class AnimsController : MonoBehaviour
     {
         if (!HasParam(jumpingParam))
         {
-            if (debugLogs) Debug.LogWarning($"{name}: Animator не содержит параметр '{jumpingParam}'", this);
             return;
         }
 
@@ -73,52 +65,56 @@ public class AnimsController : MonoBehaviour
     {
         if (!HasParam(fallingParam))
         {
-            if (debugLogs) Debug.LogWarning($"{name}: Animator не содержит параметр '{fallingParam}'", this);
             return;
         }
 
         animator.SetBool(fallingParam, value);
-        if (debugLogs) Debug.Log($"{name}: {fallingParam} = {value}", this);
     }
-
-    // Булевий параметр атаки (вмикається/вимикається)
     public void SetAttacking(bool value)
     {
         if (!HasParam(attackingBoolParam))
         {
-            if (debugLogs) Debug.LogWarning($"{name}: Animator не содержит параметр '{attackingBoolParam}'", this);
             return;
         }
 
         animator.SetBool(attackingBoolParam, value);
-        if (debugLogs) Debug.Log($"{name}: {attackingBoolParam} = {value}", this);
     }
 
     public void ResetAttackBool()
     {
         if (!HasParam(attackingBoolParam))
         {
-            if (debugLogs) Debug.LogWarning($"{name}: Animator не содержит параметр '{attackingBoolParam}'", this);
             return;
         }
 
         animator.SetBool(attackingBoolParam, false);
-        if (debugLogs) Debug.Log($"{name}: {attackingBoolParam} = false", this);
     }
 
-    // Вызвать из Animation Event в момент попадания
     public void AttackHitEvent()
     {
-        if (debugLogs) Debug.Log($"{name}: AttackHitEvent invoked", this);
         OnAttackHit?.Invoke();
     }
 
-    // Вызвать из Animation Event в конце анимации атаки
     public void AttackEndEvent()
     {
-        if (debugLogs) Debug.Log($"{name}: AttackEndEvent invoked", this);
-        // Сбрасываем bool — безопасно
         ResetAttackBool();
         OnAttackEnd?.Invoke();
+    }
+
+    public void isAttacking1()
+    {
+        if (!HasParam(isPlayerAttacking1))
+        {
+            return;
+        }
+        animator.SetTrigger(isPlayerAttacking1);
+    }
+    public void isAttacking2()
+    {
+        if (!HasParam(isPlayerAttacking1))
+        {
+            return;
+        }
+        animator.SetTrigger(isPlayerAttacking2);
     }
 }

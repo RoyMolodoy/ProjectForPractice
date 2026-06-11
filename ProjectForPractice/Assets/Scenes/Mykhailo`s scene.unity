@@ -539,6 +539,37 @@ MonoBehaviour:
   useBounds: 0
   minBounds: {x: -Infinity, y: -Infinity}
   maxBounds: {x: Infinity, y: Infinity}
+--- !u!1 &1683869746
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1683869747}
+  m_Layer: 0
+  m_Name: AtackPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 3443629218296621865, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1683869747
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1683869746}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.004, y: -0.057, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2031054877}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1813927765
 GameObject:
   m_ObjectHideFlags: 0
@@ -665,6 +696,8 @@ GameObject:
   - component: {fileID: 2031054873}
   - component: {fileID: 2031054872}
   - component: {fileID: 2031054878}
+  - component: {fileID: 2031054879}
+  - component: {fileID: 2031054880}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -714,7 +747,7 @@ MonoBehaviour:
   groundCheckRadius: 0.2
   debugDraw: 1
   animsController: {fileID: 2031054878}
-  animHorizontalDeadzone: 0.1
+  animHorizontalDeadzone: 0
   flipDeadzone: 0.1
   fallThreshold: -0.1
 --- !u!50 &2031054874
@@ -819,6 +852,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 428574304}
+  - {fileID: 1683869747}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -838,4 +872,41 @@ MonoBehaviour:
   runningParam: isRunning
   jumpingParam: isJumping
   fallingParam: isFalling
+  AttackAnimationChanse: 40
+  attackingBoolParam: isAttacking
+  isPlayerAttacking1: isPlayerAttacking1
+  isPlayerAttacking2: isPlayerAttacking2
   debugLogs: 0
+--- !u!114 &2031054879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031054871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64e47073102b4934c888ae0aff59e3a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerHP: 3
+  MaxHP: 3
+--- !u!114 &2031054880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031054871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fc0e074e33d2734da3cbf538b42c90b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackPoint: {fileID: 1683869747}
+  attackRange: 0.5
+  attackDamage: 10
+  attackCooldown: 0.5
+  enemyLayers:
+    serializedVersion: 2
+    m_Bits: 0
