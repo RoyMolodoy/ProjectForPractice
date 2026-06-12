@@ -79,7 +79,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_Sprite: {fileID: -803321122, guid: 836ba81373ddf664c8a192783efe0ecd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
@@ -126,7 +126,7 @@ MonoBehaviour:
   stopDistance: 3.5
   jumpForce: 6
   obstacleCheckDistance: 1.5
-  jumpCooldown: 0.5
+  jumpCooldown: 0.2
   obstacleRayOffset: {x: 0, y: -0.8}
   visionRange: 10
   obstacleLayer:

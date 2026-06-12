@@ -15,6 +15,6 @@ MonoBehaviour:
   skillName: Wind fast
   description: Gain dash "by clicking button F"
   skillIcon: {fileID: 0}
-  type: 5
+  type: 4
   rarity: 1
   value: 0
