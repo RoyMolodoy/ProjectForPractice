@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 63593500}
   - component: {fileID: 63593498}
   - component: {fileID: 63593502}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (15)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -233,7 +233,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 20
+  m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &63593502
 MonoBehaviour:
@@ -266,7 +266,7 @@ GameObject:
   - component: {fileID: 83498656}
   - component: {fileID: 83498654}
   - component: {fileID: 83498658}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (7)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -364,7 +364,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &83498658
 MonoBehaviour:
@@ -397,7 +397,7 @@ GameObject:
   - component: {fileID: 97897599}
   - component: {fileID: 97897597}
   - component: {fileID: 97897601}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (6)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -495,7 +495,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &97897601
 MonoBehaviour:
@@ -528,7 +528,7 @@ GameObject:
   - component: {fileID: 137955991}
   - component: {fileID: 137955989}
   - component: {fileID: 137955993}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (9)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -626,7 +626,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &137955993
 MonoBehaviour:
@@ -659,7 +659,7 @@ GameObject:
   - component: {fileID: 225922321}
   - component: {fileID: 225922319}
   - component: {fileID: 225922323}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (16)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -757,7 +757,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 21
+  m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &225922323
 MonoBehaviour:
@@ -790,7 +790,7 @@ GameObject:
   - component: {fileID: 300347666}
   - component: {fileID: 300347664}
   - component: {fileID: 300347668}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (11)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -888,7 +888,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &300347668
 MonoBehaviour:
@@ -920,7 +920,7 @@ GameObject:
   - component: {fileID: 347962541}
   - component: {fileID: 347962540}
   - component: {fileID: 347962542}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Heal
   m_TagString: Heal
   m_Icon: {fileID: 0}
@@ -970,8 +970,8 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0.13975689, g: 0.9245283, b: 0.056692798, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
+  m_FlipX: 1
+  m_FlipY: 1
   m_DrawMode: 0
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
@@ -992,7 +992,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &347962542
 BoxCollider2D:
@@ -1083,7 +1083,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 1000, y: 3.47}
+  m_Size: {x: 1000, y: 3.4887147}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -1097,12 +1097,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 401652519}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.8, z: 0}
+  m_LocalPosition: {x: 0, y: -1.8281, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 26
+  m_RootOrder: 27
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &463193671
 GameObject:
@@ -1116,7 +1116,7 @@ GameObject:
   - component: {fileID: 463193674}
   - component: {fileID: 463193672}
   - component: {fileID: 463193676}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (14)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -1214,7 +1214,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 19
+  m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &463193676
 MonoBehaviour:
@@ -1247,7 +1247,7 @@ GameObject:
   - component: {fileID: 582153552}
   - component: {fileID: 582153550}
   - component: {fileID: 582153554}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (8)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -1345,7 +1345,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &582153554
 MonoBehaviour:
@@ -1366,6 +1366,63 @@ MonoBehaviour:
   invulnerabilityDuration: 1.5
   numberOfFlashes: 6
   spriteRenderer: {fileID: 0}
+--- !u!1001 &667224713
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2302006403588271401, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
+      propertyPath: m_Name
+      value: Mob1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3556348302349802267, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3556348302349802267, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.0163193
+      objectReference: {fileID: 0}
+    - target: {fileID: 3556348302349802267, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.3423595
+      objectReference: {fileID: 0}
+    - target: {fileID: 3556348302349802267, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3556348302349802267, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3556348302349802267, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3556348302349802267, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3556348302349802267, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3556348302349802267, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3556348302349802267, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3556348302349802267, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a868e19164bf0d8408e9c3cc1b652d6a, type: 3}
 --- !u!1 &794223588
 GameObject:
   m_ObjectHideFlags: 0
@@ -1378,7 +1435,7 @@ GameObject:
   - component: {fileID: 794223591}
   - component: {fileID: 794223589}
   - component: {fileID: 794223593}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (18)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -1476,7 +1533,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 23
+  m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &794223593
 MonoBehaviour:
@@ -1509,7 +1566,7 @@ GameObject:
   - component: {fileID: 891560166}
   - component: {fileID: 891560168}
   - component: {fileID: 891560169}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -1581,7 +1638,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &891560168
 BoxCollider2D:
@@ -1640,7 +1697,7 @@ GameObject:
   - component: {fileID: 894100333}
   - component: {fileID: 894100331}
   - component: {fileID: 894100335}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (1)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -1738,7 +1795,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &894100335
 MonoBehaviour:
@@ -1771,7 +1828,7 @@ GameObject:
   - component: {fileID: 931976691}
   - component: {fileID: 931976689}
   - component: {fileID: 931976693}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (3)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -1869,7 +1926,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &931976693
 MonoBehaviour:
@@ -1902,7 +1959,7 @@ GameObject:
   - component: {fileID: 1075664772}
   - component: {fileID: 1075664770}
   - component: {fileID: 1075664774}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (12)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -2000,7 +2057,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 17
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1075664774
 MonoBehaviour:
@@ -2032,8 +2089,7 @@ GameObject:
   - component: {fileID: 1226900544}
   - component: {fileID: 1226900543}
   - component: {fileID: 1226900545}
-  - component: {fileID: 1226900546}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DamageTest
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -2083,8 +2139,8 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0.9528302, g: 0, b: 0, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
+  m_FlipX: 1
+  m_FlipY: 1
   m_DrawMode: 2
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
@@ -2105,7 +2161,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1226900545
 BoxCollider2D:
@@ -2133,27 +2189,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!50 &1226900546
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1226900542}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!1 &1370219274
 GameObject:
   m_ObjectHideFlags: 0
@@ -2166,7 +2201,7 @@ GameObject:
   - component: {fileID: 1370219277}
   - component: {fileID: 1370219275}
   - component: {fileID: 1370219279}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (19)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -2264,7 +2299,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 24
+  m_RootOrder: 25
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1370219279
 MonoBehaviour:
@@ -2297,7 +2332,7 @@ GameObject:
   - component: {fileID: 1409983629}
   - component: {fileID: 1409983627}
   - component: {fileID: 1409983631}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (10)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -2395,7 +2430,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1409983631
 MonoBehaviour:
@@ -2426,7 +2461,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1437280859}
   - component: {fileID: 1437280858}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Angel Statue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2498,7 +2533,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 25
+  m_RootOrder: 26
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1652946516
 GameObject:
@@ -2653,7 +2688,7 @@ GameObject:
   - component: {fileID: 1736769065}
   - component: {fileID: 1736769063}
   - component: {fileID: 1736769067}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (2)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -2751,7 +2786,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1736769067
 MonoBehaviour:
@@ -2803,7 +2838,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1813927768
 BoxCollider2D:
@@ -2895,7 +2930,7 @@ GameObject:
   - component: {fileID: 1899736705}
   - component: {fileID: 1899736703}
   - component: {fileID: 1899736707}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (4)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -2993,7 +3028,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1899736707
 MonoBehaviour:
@@ -3026,7 +3061,7 @@ GameObject:
   - component: {fileID: 1999989591}
   - component: {fileID: 1999989589}
   - component: {fileID: 1999989593}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (13)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -3124,7 +3159,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 18
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1999989593
 MonoBehaviour:
@@ -3157,7 +3192,7 @@ GameObject:
   - component: {fileID: 2015534111}
   - component: {fileID: 2015534109}
   - component: {fileID: 2015534113}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (17)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -3255,7 +3290,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 22
+  m_RootOrder: 23
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2015534113
 MonoBehaviour:
@@ -3293,7 +3328,7 @@ GameObject:
   - component: {fileID: 2117440804}
   - component: {fileID: 2117440802}
   - component: {fileID: 2117440806}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (5)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -3391,7 +3426,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2117440806
 MonoBehaviour:
@@ -3425,7 +3460,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1689743682417654552, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1689743682417654552, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
       propertyPath: m_LocalPosition.x
