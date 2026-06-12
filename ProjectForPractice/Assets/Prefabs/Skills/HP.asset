@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72fbff6c5d44d6547808f9f61b4d80d0, type: 3}
+  m_Name: HP
+  m_EditorClassIdentifier: 
+  skillName: TOO FAT
+  description: Give +1 extra health point
+  skillIcon: {fileID: 0}
+  type: 1
+  rarity: 0
+  value: 1

@@ -8,7 +8,7 @@ public class PlayerAttack : MonoBehaviour
     [Header("Attack settings")]
     public Transform attackPoint;
     public float attackRange = 0.5f;
-    public int attackDamage = 10;
+    public int attackDamage = 1;
     public float attackCooldown = 0.5f;
     public string enemyTag = "Enemy"; // Тег врагов
     public bool AlternativeAtack = true; // Включить альтернативную атаку

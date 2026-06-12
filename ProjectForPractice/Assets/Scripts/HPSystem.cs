@@ -7,6 +7,7 @@ public class HPSystem : MonoBehaviour
     [Header("Health Settings")]
     public int HP = 3;
     public int MaxHP = 3;
+    public int defense = 0;
     public Image HPBar;
 
     [Header("Invulnerability (Тільки для Player)")]
@@ -67,7 +68,7 @@ public class HPSystem : MonoBehaviour
         }
     }
 
-    void PlusHP(int plusHP)
+    public void PlusHP(int plusHP)
     {
         if (HP < MaxHP)
         {
