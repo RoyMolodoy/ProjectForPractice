@@ -8,6 +8,8 @@ public class AnimsController : MonoBehaviour
     [SerializeField] bool isPlayer = false;
     [SerializeField] private float timeToDestroy = 5.0f;
     [SerializeField] Animator animator;
+    private Collider2D col;
+    private Rigidbody2D rb;
 
     [SerializeField] string runningParam = "isRunning";
     [SerializeField] string jumpingParam = "isJumping";
@@ -27,7 +29,11 @@ public class AnimsController : MonoBehaviour
     void Awake()
     {
         if (isPlayer == false)
+        {
             mob = GetComponent<MobAI>();
+            col = GetComponent<Collider2D>();
+            rb = GetComponent<Rigidbody2D>();
+        }
         if (animator == null)
             animator = GetComponent<Animator>();
 
@@ -131,6 +137,8 @@ public class AnimsController : MonoBehaviour
         if (isPlayer == false && mob != null)
         {
             mob.enabled = false;
+            rb.isKinematic = true;
+            Destroy(col);
             Destroy(gameObject, timeToDestroy);
         }
 
