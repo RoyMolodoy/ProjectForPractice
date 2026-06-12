@@ -105,6 +105,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 3
   stopDistance: 1.5
+  jumpForce: 6
+  obstacleCheckDistance: 1.5
+  jumpCooldown: 0.2
+  obstacleRayOffset: {x: 0, y: -0.5}
   visionRange: 10
   obstacleLayer:
     serializedVersion: 2

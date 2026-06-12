@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class MobAI : MonoBehaviour
@@ -9,10 +8,16 @@ public class MobAI : MonoBehaviour
     [SerializeField] private float moveSpeed = 3f;
     [SerializeField] private float stopDistance = 0.8f;
 
+    [Header("Jump Over Obstacles")]
+    [SerializeField] private float jumpForce = 6f; // Сила стрибка моба
+    [SerializeField] private float obstacleCheckDistance = 0.6f; // На якій відстані моб помічає стіну
+    [SerializeField] private float jumpCooldown = 1.0f; // Затримка між стрибками, щоб не стрибав без упину
+    [SerializeField] private Vector2 obstacleRayOffset = new Vector2(0f, 0.2f); // Зміщення променя по висоті (щоб не чіпляв підлогу)
+
     [Header("Vision (Line of Sight)")]
-    [SerializeField] private float visionRange = 10f; // Максимальна дальність зору
-    [SerializeField] private LayerMask obstacleLayer; // Шар, який блокує зір (стіни, земля)
-    [SerializeField] private Vector2 eyeOffset = new Vector2(0f, 0.5f); // Зміщення "очей", щоб промінь не чіпляв підлогу
+    [SerializeField] private float visionRange = 10f;
+    [SerializeField] private LayerMask obstacleLayer; // Цей же шар використовуємо для стін, через які треба стрибати
+    [SerializeField] private Vector2 eyeOffset = new Vector2(0f, 0.5f);
 
     [Header("Ground & Animations")]
     [SerializeField] private Transform groundCheck;
@@ -21,15 +26,15 @@ public class MobAI : MonoBehaviour
     [SerializeField] private AnimsController animsController;
     [SerializeField] public HPSystem HP;
     [SerializeField] private PlayerAttack playerAttack;
-    [SerializeField] private float verticalThreshold = 0.1f; // поріг по Y для стрибка/падіння анімацій
+    [SerializeField] private float verticalThreshold = 0.1f;
     [SerializeField] private float flipDeadzone = 0.05f;
 
     [Header("Attack")]
     [SerializeField] private float attackRange = 0.8f;
     [SerializeField] private float attackCooldown = 1.0f;
     [SerializeField] private int damage = 1;
-    [SerializeField] private float attackDuration = 0.6f; // тривалість анімації атаки
-    [SerializeField] private float attackHitDelay = 0.2f; // використовуется як запасний таймер, но основной — Animation Event
+    [SerializeField] private float attackDuration = 0.6f;
+    [SerializeField] private float attackHitDelay = 0.2f;
 
     private bool _isDead = false;
     private Rigidbody2D _rb;
@@ -37,6 +42,7 @@ public class MobAI : MonoBehaviour
     private bool facingRight = true;
     private bool isGrounded;
     private float _lastAttackTime = -999f;
+    private float _lastJumpTime = -999f; // Таймер для стрибків
     private bool _isAttacking = false;
     private bool _isMoving = false;
 
@@ -52,13 +58,11 @@ public class MobAI : MonoBehaviour
             groundCheck = go.transform;
         }
 
-        if (HP == null)
-            HP = GetComponent<HPSystem>();
-        if (animsController == null)
-            animsController = GetComponent<AnimsController>();
+        if (HP == null) HP = GetComponent<HPSystem>();
+        if (animsController == null) animsController = GetComponent<AnimsController>();
 
         if (animsController != null)
-        {      
+        {
             animsController.OnAttackHit += HandleAttackHit;
             animsController.OnAttackEnd += HandleAttackEnd;
         }
@@ -86,24 +90,21 @@ public class MobAI : MonoBehaviour
     private void FixedUpdate()
     {
         if (_player == null) return;
-        if (_isAttacking) // під час атаки рух дозволяти не будемо
+        if (_isAttacking)
         {
             _rb.velocity = new Vector2(0f, _rb.velocity.y);
             UpdateAnimations();
             return;
         }
 
-        // Ground check
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
-        // Перевіряємо, чи бачимо гравця
         if (CanSeePlayer())
         {
             ChasePlayer();
         }
         else
         {
-            // Якщо не бачимо - просто стоїмо (або тут можна додати логіку патрулювання)
             StopMoving();
         }
 
@@ -147,11 +148,40 @@ public class MobAI : MonoBehaviour
         float directionX = Mathf.Sign(_player.position.x - transform.position.x);
         _rb.velocity = new Vector2(directionX * moveSpeed, _rb.velocity.y);
 
-        // Устанавливаем флаг движения и запускаем анимацию бега через контроллер
         if (!_isMoving)
         {
             _isMoving = true;
             animsController?.SetRunning(true);
+        }
+
+        // ПЕРЕВІРКА ПЕРЕШКОД І СТРИБОК
+        CheckObstacleAndJump(directionX);
+    }
+
+    // --- ЛОГІКА СТРИБКА ---
+    // --- ЛОГІКА СТРИБКА ---
+    private void CheckObstacleAndJump(float directionX)
+    {
+        // Стрибати можна тільки якщо моб на землі і пройшов кулдаун після минулого стрибка
+        if (!isGrounded || Time.time - _lastJumpTime < jumpCooldown) return;
+
+        // Позиція, з якої пускаємо промінь
+        Vector2 startPos = (Vector2)transform.position + obstacleRayOffset;
+        Vector2 endPos = startPos + new Vector2(directionX * obstacleCheckDistance, 0f);
+
+        RaycastHit2D hit = Physics2D.Linecast(startPos, endPos, obstacleLayer);
+
+        if (hit.collider != null)
+        {
+            // Перешкоду знайдено - стрибаємо!
+            _lastJumpTime = Time.time;
+            _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
+
+            // ПРИМУСОВО ВИКЛИКАЄМО АНІМАЦІЮ СТРИБКА (Безпечно для мобів без неї)
+            animsController?.SetJumping(true);
+
+            // Якщо в тебе є окремий тригер саме для початку стрибка (за бажанням):
+            // animsController?.isJumpingTrigger(); // (якщо ти додаси такий метод в AnimsController)
         }
     }
 
@@ -173,10 +203,8 @@ public class MobAI : MonoBehaviour
     private System.Collections.IEnumerator DoAttackCoroutine()
     {
         _isAttacking = true;
-
         animsController?.SetRunning(false);
         animsController?.SetAttacking(true);
-
         _rb.velocity = new Vector2(0f, _rb.velocity.y);
 
         if (attackHitDelay > 0f)
@@ -205,7 +233,6 @@ public class MobAI : MonoBehaviour
         }
     }
 
-    // Обработчик, вызываемый из AnimsController при событии попадания в анимации
     private void HandleAttackHit()
     {
         if (!_isAttacking || _player == null) return;
@@ -217,7 +244,6 @@ public class MobAI : MonoBehaviour
         }
     }
 
-    // Обработчик конца анимации (если нужно)
     private void HandleAttackEnd()
     {
         _isAttacking = false;
@@ -236,12 +262,11 @@ public class MobAI : MonoBehaviour
     public void TakeDamage(int damageAmount)
     {
         if (_isDead) return;
-
         if (HP == null) return;
 
         HP.HP -= damageAmount;
 
-        if(HP.HP <= 0)
+        if (HP.HP <= 0)
             this.enabled = false;
     }
 
@@ -274,7 +299,6 @@ public class MobAI : MonoBehaviour
         float horizontal = Mathf.Abs(_rb.velocity.x);
         float vertical = _rb.velocity.y;
 
-        // running: теперь учитываем флаг _isMoving, а не только скорость и isGrounded
         bool isRunning = _isMoving && !_isAttacking;
         animsController.SetRunning(isRunning);
 
@@ -301,5 +325,11 @@ public class MobAI : MonoBehaviour
 
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(transform.position, attackRange);
+
+        // Малюємо лінію перевірки перешкоди у Scene View
+        Gizmos.color = Color.yellow;
+        Vector2 startPos = (Vector2)transform.position + obstacleRayOffset;
+        Vector2 endPos = startPos + new Vector2((facingRight ? 1f : -1f) * obstacleCheckDistance, 0f);
+        Gizmos.DrawLine(startPos, endPos);
     }
 }

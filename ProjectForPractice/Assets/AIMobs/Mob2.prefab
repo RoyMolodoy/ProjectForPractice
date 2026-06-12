@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 7867915651737764470}
   - component: {fileID: 7867915651737764471}
   - component: {fileID: 7867915651737764464}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Mob2
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -124,6 +124,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 3
   stopDistance: 3.5
+  jumpForce: 6
+  obstacleCheckDistance: 1.5
+  jumpCooldown: 0.5
+  obstacleRayOffset: {x: 0, y: -0.8}
   visionRange: 10
   obstacleLayer:
     serializedVersion: 2
@@ -217,7 +221,7 @@ MonoBehaviour:
   timeToDestroy: 3
   animator: {fileID: 7867915651737764471}
   runningParam: isWalk
-  jumpingParam: isJumping
+  jumpingParam: Jump
   fallingParam: isFalling
   DashParam: Dash
   attackingBoolParam: isAttack
@@ -233,7 +237,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7867915651922234392}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
