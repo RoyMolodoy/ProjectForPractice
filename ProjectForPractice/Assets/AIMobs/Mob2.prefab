@@ -79,7 +79,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -803321122, guid: 836ba81373ddf664c8a192783efe0ecd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
@@ -105,6 +105,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!114 &7867915651737764468
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,6 +219,7 @@ MonoBehaviour:
   runningParam: isWalk
   jumpingParam: isJumping
   fallingParam: isFalling
+  DashParam: Dash
   attackingBoolParam: isAttack
   isPlayerAttacking1: isPlayerAttacking1
   isPlayerAttacking2: isPlayerAttacking2
