@@ -19,7 +19,7 @@ public class MobAI : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float groundCheckRadius = 0.12f;
     [SerializeField] private AnimsController animsController;
-    [SerializeField] public PlayerHP HP;
+    [SerializeField] public HPSystem HP;
     [SerializeField] private PlayerAttack playerAttack;
     [SerializeField] private float verticalThreshold = 0.1f; // поріг по Y для стрибка/падіння анімацій
     [SerializeField] private float flipDeadzone = 0.05f;
@@ -53,7 +53,7 @@ public class MobAI : MonoBehaviour
         }
 
         if (HP == null)
-            HP = GetComponent<PlayerHP>();
+            HP = GetComponent<HPSystem>();
         if (animsController == null)
             animsController = GetComponent<AnimsController>();
 
@@ -246,11 +246,11 @@ public class MobAI : MonoBehaviour
         }
 
         // Віднімаємо здоров'я
-        HP.playerHP -= damageAmount;
-        Debug.Log($"Моб {name} отримав {damageAmount} шкоди. Залишилось ХП: {HP.playerHP}");
+        HP.HP -= damageAmount;
+        Debug.Log($"Моб {name} отримав {damageAmount} шкоди. Залишилось ХП: {HP.HP}");
 
         // Перевіряємо смерть
-        if (HP.playerHP <= 0)
+        if (HP.HP <= 0)
         {
             Die();
         }
