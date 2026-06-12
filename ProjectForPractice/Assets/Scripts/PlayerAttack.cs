@@ -91,7 +91,7 @@ public class PlayerAttack : MonoBehaviour
             if (!col.CompareTag(enemyTag)) continue;
 
             // Попытка вызвать MinusHP на компоненте PlayerHP (без явной зависимости)
-            Component hpComp = col.GetComponent("PlayerHP");
+            Component hpComp = col.GetComponent("HPSystem");
             if (hpComp != null)
             {
                 hpComp.SendMessage("MinusHP", damage, SendMessageOptions.DontRequireReceiver);

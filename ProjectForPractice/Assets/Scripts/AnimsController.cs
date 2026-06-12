@@ -1,4 +1,8 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using UnityEngine;
+
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,12 +13,11 @@ public class AnimsController : MonoBehaviour
     [SerializeField] string runningParam = "isRunning";
     [SerializeField] string jumpingParam = "isJumping";
     [SerializeField] string fallingParam = "isFalling";
-    [SerializeField] string deathParam = "isDead";
 
     [Header("Attack")]
     [SerializeField] string attackingBoolParam = "isAttacking";
     [SerializeField] public string isPlayerAttacking1 = "isPlayerAttacking1";
-    [SerializeField] public  string isPlayerAttacking2 = "isPlayerAttacking2";
+    [SerializeField] public string isPlayerAttacking2 = "isPlayerAttacking2";
     [Header("Debug")]
     [SerializeField] bool debugLogs = false;
     private HashSet<string> _animParams;
@@ -119,12 +122,46 @@ public class AnimsController : MonoBehaviour
         animator.SetTrigger(isPlayerAttacking2);
     }
 
-    public void SetDeath(bool value)
+    public void DeathAnim()
     {
-        if (!HasParam(deathParam))
+        if (animator == null) return;
+
+        animator.SetTrigger("Death");
+        // запускаем корутину, которая дождётся окончания состояния смерти и отключит Animator
+        StartCoroutine(DisableAnimatorAfterDeath("Death", 0));
+    }
+
+    // Ожидает перехода в указанный стейт на слое layerIndex и затем полного окончания анимации (normalizedTime >= 1).
+    // После этого выключает animator.enabled = false.
+    private IEnumerator DisableAnimatorAfterDeath(string stateName, int layerIndex)
+    {
+        if (animator == null)
+            yield break;
+
+        int stateHash = Animator.StringToHash(stateName);
+
+        // дождаться, пока Animator перейдёт в состояние "Death"
+        var safetyTimer = 0f;
+        const float safetyTimeout = 5f; // на случай, если переход не произойдёт
+        while (animator.GetCurrentAnimatorStateInfo(layerIndex).shortNameHash != stateHash)
         {
-            return;
+            yield return null;
+            safetyTimer += Time.deltaTime;
+            if (safetyTimer > safetyTimeout)
+            {
+                if (debugLogs) Debug.LogWarning($"{name}: ожидание состояния '{stateName}' тайм-аут.", this);
+                yield break;
+            }
         }
-        animator.SetBool(deathParam, value);
+
+        // дождаться завершения проигрывания (normalizedTime >= 1)
+        while (animator.GetCurrentAnimatorStateInfo(layerIndex).normalizedTime < 1f)
+        {
+            yield return null;
+        }
+
+        // окончательно отключаем аниматор
+        animator.enabled = false;
+        if (debugLogs) Debug.Log($"{name}: animator отключен после завершения '{stateName}'", this);
     }
 }

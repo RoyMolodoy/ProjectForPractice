@@ -271,7 +271,7 @@ public class MobAI : MonoBehaviour
         animsController?.SetAttacking(false);
 
         // Вмикаємо анімацію смерті
-        animsController?.SetDeath(true);
+        animsController?.DeathAnim();
 
         // Вимикаємо колайдер, щоб труп не заважав гравцю ходити (за бажанням)
         Collider2D coll = GetComponent<Collider2D>();
