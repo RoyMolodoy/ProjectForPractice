@@ -144,7 +144,7 @@ MonoBehaviour:
   verticalThreshold: 0.1
   flipDeadzone: 0.05
   attackRange: 3.5
-  attackCooldown: 1
+  attackCooldown: 3
   damage: 1
   attackDuration: 0.6
   attackHitDelay: 0.2
