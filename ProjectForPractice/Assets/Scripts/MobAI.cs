@@ -235,50 +235,14 @@ public class MobAI : MonoBehaviour
 
     public void TakeDamage(int damageAmount)
     {
-        // 1. Захист від подвійної смерті
         if (_isDead) return;
 
-        // 2. Перевірка: чи є взагалі здоров'я у моба?
-        if (HP == null)
-        {
-            Debug.LogError($"<color=red>ПОМИЛКА:</color> На мобі {name} немає скрипта PlayerHP! Додай його в Інспекторі.", this);
-            return;
-        }
+        if (HP == null) return;
 
-        // Віднімаємо здоров'я
         HP.HP -= damageAmount;
-        Debug.Log($"Моб {name} отримав {damageAmount} шкоди. Залишилось ХП: {HP.HP}");
 
-        // Перевіряємо смерть
-        if (HP.HP <= 0)
-        {
-            Die();
-        }
-    }
-
-    private void Die()
-    {
-        Debug.Log($"<color=orange>Моб {name} помирає!</color>");
-        _isDead = true;
-
-        // Повністю зупиняємо моба
-        _rb.velocity = Vector2.zero;
-        _isMoving = false;
-        _isAttacking = false;
-
-        // Вимикаємо всі анімації руху та атаки
-        animsController?.SetRunning(false);
-        animsController?.SetAttacking(false);
-
-        // Вмикаємо анімацію смерті
-        animsController?.DeathAnim();
-
-        // Вимикаємо колайдер, щоб труп не заважав гравцю ходити (за бажанням)
-        Collider2D coll = GetComponent<Collider2D>();
-        if (coll != null) coll.enabled = false;
-
-        // Вимикаємо MobAI, щоб FixedUpdate більше не працював
-        this.enabled = false;
+        if(HP.HP <= 0)
+            this.enabled = false;
     }
 
     private void HandleFlip()

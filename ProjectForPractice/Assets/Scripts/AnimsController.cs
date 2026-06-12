@@ -5,6 +5,8 @@ using System.Collections;
 
 public class AnimsController : MonoBehaviour
 {
+    [SerializeField] bool isPlayer = false;
+    [SerializeField] private float timeToDestroy = 5.0f;
     [SerializeField] Animator animator;
 
     [SerializeField] string runningParam = "isRunning";
@@ -17,12 +19,15 @@ public class AnimsController : MonoBehaviour
     [SerializeField] public string isPlayerAttacking2 = "isPlayerAttacking2";
     [Header("Debug")]
     [SerializeField] bool debugLogs = false;
+    private MobAI mob;
     private HashSet<string> _animParams;
     public event Action OnAttackHit;
     public event Action OnAttackEnd;
 
     void Awake()
     {
+        if (isPlayer == false)
+            mob = GetComponent<MobAI>();
         if (animator == null)
             animator = GetComponent<Animator>();
 
@@ -122,6 +127,12 @@ public class AnimsController : MonoBehaviour
     public void DeathAnim()
     {
         if (animator == null) return;
+
+        if (isPlayer == false && mob != null)
+        {
+            mob.enabled = false;
+            Destroy(gameObject, timeToDestroy);
+        }
 
         animator.SetTrigger("Death");
         // запускаем корутину, которая дождётся окончания состояния смерти и отключит Animator
