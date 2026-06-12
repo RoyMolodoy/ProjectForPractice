@@ -249,6 +249,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!1 &83498653
 GameObject:
   m_ObjectHideFlags: 0
@@ -375,6 +380,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!1 &97897596
 GameObject:
   m_ObjectHideFlags: 0
@@ -501,6 +511,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!1 &137955988
 GameObject:
   m_ObjectHideFlags: 0
@@ -627,6 +642,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!1 &225922318
 GameObject:
   m_ObjectHideFlags: 0
@@ -753,6 +773,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!1 &300347663
 GameObject:
   m_ObjectHideFlags: 0
@@ -879,6 +904,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!1 &347962539
 GameObject:
   m_ObjectHideFlags: 0
@@ -1200,6 +1230,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!1 &582153549
 GameObject:
   m_ObjectHideFlags: 0
@@ -1326,6 +1361,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!1 &794223588
 GameObject:
   m_ObjectHideFlags: 0
@@ -1452,6 +1492,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!1 &891560163
 GameObject:
   m_ObjectHideFlags: 0
@@ -1578,6 +1623,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!1 &894100330
 GameObject:
   m_ObjectHideFlags: 0
@@ -1704,6 +1754,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!1 &931976688
 GameObject:
   m_ObjectHideFlags: 0
@@ -1830,6 +1885,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!1 &1075664769
 GameObject:
   m_ObjectHideFlags: 0
@@ -1956,6 +2016,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!1 &1226900542
 GameObject:
   m_ObjectHideFlags: 0
@@ -2215,6 +2280,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!1 &1409983626
 GameObject:
   m_ObjectHideFlags: 0
@@ -2341,6 +2411,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!1 &1437280857
 GameObject:
   m_ObjectHideFlags: 0
@@ -2692,6 +2767,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!1 &1813927765
 GameObject:
   m_ObjectHideFlags: 0
@@ -2929,6 +3009,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!1 &1999989588
 GameObject:
   m_ObjectHideFlags: 0
@@ -3055,6 +3140,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!1 &2015534108
 GameObject:
   m_ObjectHideFlags: 0
@@ -3181,6 +3271,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!4 &2031054877 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1689743682417654552, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
@@ -3312,6 +3407,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!1001 &1689743683072133893
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3366,6 +3466,14 @@ PrefabInstance:
     - target: {fileID: 1689743682417654552, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1689743682417654556, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
+      propertyPath: canDash
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1689743682417654556, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
+      propertyPath: canDoubleJump
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}

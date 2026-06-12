@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Jump")]
     public bool useVelocityJump = true;
     public float jumpForce = 14f;
-    public float doubleJumpForce = 12f; // Сила другого стрибка
+    public float doubleJumpForce = 12f; // Сила второго стрибка
     public Transform groundCheck;
     public LayerMask groundLayer;
     public float groundCheckRadius = 0.12f;
@@ -165,7 +165,6 @@ public class PlayerMovement : MonoBehaviour
     {
         isDashing = true;
 
-        // 1. ВМИКАЄМО АНІМАЦІЮ ДЕШУ
         if (animsController != null) animsController.SetDashing(true);
 
         rb.gravityScale = 0f;
@@ -177,11 +176,10 @@ public class PlayerMovement : MonoBehaviour
         rb.gravityScale = defaultGravity;
         rb.velocity = new Vector2(0f, rb.velocity.y);
 
-        // 2. ВИМИКАЄМО АНІМАЦІЮ ДЕШУ
-        if (animsController != null) animsController.SetDashing(false);
-
         isDashing = false;
         dashCooldownTimer = dashCooldown;
+
+        if (animsController != null) animsController.SetDashing(false);
     }
 
     void HandleFlip()

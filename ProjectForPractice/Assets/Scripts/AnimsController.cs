@@ -15,7 +15,7 @@ public class AnimsController : MonoBehaviour
     [SerializeField] string runningParam = "isRunning";
     [SerializeField] string jumpingParam = "isJumping";
     [SerializeField] string fallingParam = "isFalling";
-    [SerializeField] string dashingParam = "isDashing"; // <--- ДОДАНО ПАРАМЕТР ДЕШУ
+    [SerializeField] string DashParam = "Dash";
 
     [Header("Attack")]
     [SerializeField] string attackingBoolParam = "isAttacking";
@@ -78,12 +78,10 @@ public class AnimsController : MonoBehaviour
         animator.SetBool(fallingParam, value);
     }
 
-    // --- ДОДАНИЙ МЕТОД ДЛЯ ДЕШУ ---
     public void SetDashing(bool value)
     {
-        if (!HasParam(dashingParam)) return;
-        animator.SetBool(dashingParam, value);
-        if (debugLogs) Debug.Log($"{name}: {dashingParam} = {value}", this);
+        if (animator == null) return;
+        animator.SetBool(DashParam, value);
     }
 
     public void SetAttacking(bool value)
