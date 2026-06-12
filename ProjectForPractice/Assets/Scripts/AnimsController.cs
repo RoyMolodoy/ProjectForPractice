@@ -9,6 +9,7 @@ public class AnimsController : MonoBehaviour
     [SerializeField] string runningParam = "isRunning";
     [SerializeField] string jumpingParam = "isJumping";
     [SerializeField] string fallingParam = "isFalling";
+    [SerializeField] string deathParam = "isDead";
 
     [Header("Attack")]
     [SerializeField] string attackingBoolParam = "isAttacking";
@@ -116,5 +117,14 @@ public class AnimsController : MonoBehaviour
             return;
         }
         animator.SetTrigger(isPlayerAttacking2);
+    }
+
+    public void SetDeath(bool value)
+    {
+        if (!HasParam(deathParam))
+        {
+            return;
+        }
+        animator.SetBool(deathParam, value);
     }
 }

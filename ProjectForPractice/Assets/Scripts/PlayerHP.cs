@@ -4,17 +4,12 @@ using UnityEngine;
 
 public class PlayerHP : MonoBehaviour
 {
-    public int playerHP = 3;
-    public int MaxHP = 3;
+    public int playerHP;
+    public int MaxHP;
 
     void MinusHP(int minusHP)
     {
         playerHP -= minusHP;
-        //временно
-        if (playerHP <= 0)
-        {
-            Destroy(gameObject);
-        }
     }
     void PlusHP(int plusHP)
     {

@@ -19,7 +19,8 @@ public class MobAI : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float groundCheckRadius = 0.12f;
     [SerializeField] private AnimsController animsController;
-    [SerializeField] private float runThreshold = 0.1f; // мінімальна швидкість для режиму "біг"
+    [SerializeField] public PlayerHP HP;
+    [SerializeField] private PlayerAttack playerAttack;
     [SerializeField] private float verticalThreshold = 0.1f; // поріг по Y для стрибка/падіння анімацій
     [SerializeField] private float flipDeadzone = 0.05f;
 
@@ -30,6 +31,7 @@ public class MobAI : MonoBehaviour
     [SerializeField] private float attackDuration = 0.6f; // тривалість анімації атаки
     [SerializeField] private float attackHitDelay = 0.2f; // використовуется як запасний таймер, но основной — Animation Event
 
+    private bool _isDead = false;
     private Rigidbody2D _rb;
     private Transform _player;
     private bool facingRight = true;
@@ -50,12 +52,13 @@ public class MobAI : MonoBehaviour
             groundCheck = go.transform;
         }
 
+        if (HP == null)
+            HP = GetComponent<PlayerHP>();
         if (animsController == null)
             animsController = GetComponent<AnimsController>();
 
-        // Подписка на события анимаций (безопасно, проверяем null)
         if (animsController != null)
-        {
+        {      
             animsController.OnAttackHit += HandleAttackHit;
             animsController.OnAttackEnd += HandleAttackEnd;
         }
@@ -76,6 +79,7 @@ public class MobAI : MonoBehaviour
         if (playerObj != null)
         {
             _player = playerObj.transform;
+            playerAttack = _player.gameObject.GetComponent<PlayerAttack>();
         }
     }
 
@@ -227,6 +231,54 @@ public class MobAI : MonoBehaviour
         e.y = playerIsRight ? 180f : 0f;
         transform.localEulerAngles = e;
         facingRight = playerIsRight;
+    }
+
+    public void TakeDamage(int damageAmount)
+    {
+        // 1. Захист від подвійної смерті
+        if (_isDead) return;
+
+        // 2. Перевірка: чи є взагалі здоров'я у моба?
+        if (HP == null)
+        {
+            Debug.LogError($"<color=red>ПОМИЛКА:</color> На мобі {name} немає скрипта PlayerHP! Додай його в Інспекторі.", this);
+            return;
+        }
+
+        // Віднімаємо здоров'я
+        HP.playerHP -= damageAmount;
+        Debug.Log($"Моб {name} отримав {damageAmount} шкоди. Залишилось ХП: {HP.playerHP}");
+
+        // Перевіряємо смерть
+        if (HP.playerHP <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        Debug.Log($"<color=orange>Моб {name} помирає!</color>");
+        _isDead = true;
+
+        // Повністю зупиняємо моба
+        _rb.velocity = Vector2.zero;
+        _isMoving = false;
+        _isAttacking = false;
+
+        // Вимикаємо всі анімації руху та атаки
+        animsController?.SetRunning(false);
+        animsController?.SetAttacking(false);
+
+        // Вмикаємо анімацію смерті
+        animsController?.SetDeath(true);
+
+        // Вимикаємо колайдер, щоб труп не заважав гравцю ходити (за бажанням)
+        Collider2D coll = GetComponent<Collider2D>();
+        if (coll != null) coll.enabled = false;
+
+        // Вимикаємо MobAI, щоб FixedUpdate більше не працював
+        this.enabled = false;
     }
 
     private void HandleFlip()
