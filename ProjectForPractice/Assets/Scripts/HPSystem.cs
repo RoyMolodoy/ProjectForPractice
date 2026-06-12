@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HPSystem : MonoBehaviour
 {
     public int HP = 3;
     public int MaxHP = 3;
+    public Image HPBar;
     private AnimsController animsController;
 
     private void Start()
@@ -15,6 +17,8 @@ public class HPSystem : MonoBehaviour
     void MinusHP(int minusHP)
     {
         HP -= minusHP;
+        if (HPBar != null)
+            HPBar.fillAmount = (float)HP / MaxHP;
         if (animsController != null)
         {
             if(HP <= 0)
