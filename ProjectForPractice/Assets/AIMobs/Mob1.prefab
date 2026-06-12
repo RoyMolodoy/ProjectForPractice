@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8392415247126606076}
   - component: {fileID: 3556348302349802266}
   - component: {fileID: 8392415247126606079}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Mob1
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -196,6 +196,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
+  defense: 0
+  HPBar: {fileID: 0}
+  invulnerabilityDuration: 1.5
+  numberOfFlashes: 6
+  spriteRenderer: {fileID: 0}
 --- !u!114 &8392415247126606079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,6 +219,7 @@ MonoBehaviour:
   runningParam: IsWalk
   jumpingParam: isJumping
   fallingParam: isFalling
+  DashParam: Dash
   attackingBoolParam: IsAttack
   isPlayerAttacking1: isPlayerAttacking1
   isPlayerAttacking2: isPlayerAttacking2
@@ -227,7 +233,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4973956763204972423}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
