@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,11 +22,14 @@ public class LevelRewardManager : MonoBehaviour
     [Range(0, 100)]
     public int legendaryChance = 10; // Шанс легендарки (10%)
 
+    [Header("Анімація UI")]
+    public float fadeDuration = 0.3f; // Швидкість плавного з'явлення
+
     private List<SkillData> currentChoices;
+    private CanvasGroup canvasGroup; // Компонент для керування прозорістю
 
     private void Awake()
     {
-        // Робимо скрипт доступним звідусіль (Singleton)
         if (Instance == null)
             Instance = this;
         else
@@ -35,19 +39,24 @@ public class LevelRewardManager : MonoBehaviour
     private void Start()
     {
         if (rewardPanel != null)
+        {
+            // Автоматично шукаємо або додаємо CanvasGroup на панель
+            canvasGroup = rewardPanel.GetComponent<CanvasGroup>();
+            if (canvasGroup == null)
+            {
+                canvasGroup = rewardPanel.AddComponent<CanvasGroup>();
+            }
+
             rewardPanel.SetActive(false);
+        }
     }
 
     public void ShowRewards()
     {
         if (rewardPanel == null) return;
 
-        rewardPanel.SetActive(true);
-        Time.timeScale = 0f; // Зупиняємо гру
-
+        // Генеруємо списки...
         currentChoices = new List<SkillData>();
-
-        // Копіюємо списки
         List<SkillData> tempCommon = new List<SkillData>(commonSkills);
         List<SkillData> tempLegendary = new List<SkillData>(legendarySkills);
 
@@ -55,7 +64,6 @@ public class LevelRewardManager : MonoBehaviour
         {
             SkillData pickedSkill = null;
 
-            // Логіка випадіння
             int roll = Random.Range(0, 100);
             if (roll < legendaryChance && tempLegendary.Count > 0)
             {
@@ -70,7 +78,6 @@ public class LevelRewardManager : MonoBehaviour
                 tempCommon.RemoveAt(r);
             }
 
-            // Налаштування кнопок
             if (pickedSkill != null)
             {
                 currentChoices.Add(pickedSkill);
@@ -88,20 +95,81 @@ public class LevelRewardManager : MonoBehaviour
                 skillButtons[i].gameObject.SetActive(false);
             }
         }
+
+        // Вмикаємо панель, зупиняємо час і запускаємо анімацію
+        rewardPanel.SetActive(true);
+        Time.timeScale = 0f;
+        StartCoroutine(FadeInPanel());
     }
 
     public void ChooseSkill(int index)
     {
+        // Блокуємо кнопки, щоб гравець не міг клікнути двічі під час зникнення
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
+
         SkillData chosenSkill = currentChoices[index];
         ApplySkillEffect(chosenSkill);
 
-        // Якщо взяли легендарку - видаляємо її назавжди з гри, щоб не випала вдруге
         if (chosenSkill.rarity == SkillRarity.Legendary)
         {
             legendarySkills.Remove(chosenSkill);
         }
 
-        // Ховаємо панель і відновлюємо час
+        // Запускаємо плавне зникнення
+        StartCoroutine(FadeOutPanel());
+    }
+
+    // --- КОРУТИНИ ДЛЯ ПЛАВНОСТІ ---
+
+    private IEnumerator FadeInPanel()
+    {
+        // Робимо панель повністю прозорою і трохи меншою
+        canvasGroup.alpha = 0f;
+        rewardPanel.transform.localScale = new Vector3(0.8f, 0.8f, 1f);
+
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
+
+        float elapsed = 0f;
+
+        while (elapsed < fadeDuration)
+        {
+            // Використовуємо unscaledDeltaTime, бо звичайний час зупинено!
+            elapsed += Time.unscaledDeltaTime;
+            float t = elapsed / fadeDuration;
+
+            // Плавно збільшуємо прозорість та масштаб
+            canvasGroup.alpha = Mathf.Lerp(0f, 1f, t);
+            float scale = Mathf.Lerp(0.8f, 1f, t);
+            rewardPanel.transform.localScale = new Vector3(scale, scale, 1f);
+
+            yield return null; // Чекаємо наступного кадру
+        }
+
+        // Гарантуємо, що в кінці значення ідеальні
+        canvasGroup.alpha = 1f;
+        rewardPanel.transform.localScale = Vector3.one;
+    }
+
+    private IEnumerator FadeOutPanel()
+    {
+        float elapsed = 0f;
+
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = elapsed / fadeDuration;
+
+            // Плавно зменшуємо прозорість та масштаб назад
+            canvasGroup.alpha = Mathf.Lerp(1f, 0f, t);
+            float scale = Mathf.Lerp(1f, 0.8f, t);
+            rewardPanel.transform.localScale = new Vector3(scale, scale, 1f);
+
+            yield return null;
+        }
+
+        // Коли анімація закінчилась — ховаємо панель і ВІДНОВЛЮЄМО ЧАС
         rewardPanel.SetActive(false);
         Time.timeScale = 1f;
     }
@@ -118,46 +186,38 @@ public class LevelRewardManager : MonoBehaviour
 
         switch (skill.type)
         {
-            // ПОВНЕ ЛІКУВАННЯ
             case SkillType.HealFull:
                 var hpSystemFull = player.GetComponent<HPSystem>();
-                if (hpSystemFull != null)
-                    hpSystemFull.PlusHP(999);
+                if (hpSystemFull != null) hpSystemFull.PlusHP(999);
                 break;
 
-            // ЗБІЛЬШЕННЯ МАКСИМАЛЬНОГО ХП
             case SkillType.MaxHPUp:
                 var hpSystemMax = player.GetComponent<HPSystem>();
                 if (hpSystemMax != null)
                 {
                     hpSystemMax.MaxHP += skill.value;
-                    hpSystemMax.HP += skill.value; // Даємо це ХП одразу
+                    hpSystemMax.HP += skill.value;
 
-                    // Оновлюємо UI смужку здоров'я
                     if (hpSystemMax.HPBar != null)
                         hpSystemMax.HPBar.fillAmount = (float)hpSystemMax.HP / hpSystemMax.MaxHP;
                 }
                 break;
 
-            // ЗБІЛЬШЕННЯ ЗАХИСТУ
             case SkillType.DefenseUp:
                 var hpSysDef = player.GetComponent<HPSystem>();
                 if (hpSysDef != null) hpSysDef.defense += skill.value;
                 break;
 
-            // ЗБІЛЬШЕННЯ ШКОДИ
             case SkillType.DamageUp:
                 var attackScript = player.GetComponent<PlayerAttack>();
                 if (attackScript != null) attackScript.attackDamage += (int)skill.value;
                 break;
 
-            // ЛЕГЕНДАРКА: ДЕШ
             case SkillType.DashUnlock:
                 var moveScriptDash = player.GetComponent<PlayerMovement>();
                 if (moveScriptDash != null) moveScriptDash.canDash = true;
                 break;
 
-            // ЛЕГЕНДАРКА: ПОДВІЙНИЙ СТРИБОК
             case SkillType.DoubleJumpUnlock:
                 var moveScriptJump = player.GetComponent<PlayerMovement>();
                 if (moveScriptJump != null) moveScriptJump.canDoubleJump = true;
