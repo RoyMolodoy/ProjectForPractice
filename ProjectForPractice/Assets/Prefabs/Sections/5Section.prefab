@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4743032630527069053
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 958439140484738220}
+  m_Layer: 0
+  m_Name: TeleportCheckpoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &958439140484738220
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4743032630527069053}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 4.6, y: 23.4, z: 2.41075}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5301677362847235242}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5301677361419213737
 GameObject:
   m_ObjectHideFlags: 0
@@ -7456,6 +7487,7 @@ Transform:
   - {fileID: 8703761022119588560}
   - {fileID: 5301677362091492201}
   - {fileID: 5301677361751475508}
+  - {fileID: 958439140484738220}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8953,8 +8985,37 @@ PrefabInstance:
       propertyPath: m_Name
       value: WaterSimple
       objectReference: {fileID: 0}
+    - target: {fileID: 270394267970809007, guid: 3fe42846fb4bc414b84401e88f8f9532, type: 3}
+      propertyPath: m_Size.y
+      value: 0.8777901
+      objectReference: {fileID: 0}
+    - target: {fileID: 270394267970809007, guid: 3fe42846fb4bc414b84401e88f8f9532, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.43889505
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3fe42846fb4bc414b84401e88f8f9532, type: 3}
+--- !u!1 &5355894172578370665 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 270394267970809006, guid: 3fe42846fb4bc414b84401e88f8f9532, type: 3}
+  m_PrefabInstance: {fileID: 5301677363425048775}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3509832007175572706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5355894172578370665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0b17616b58908d4e82d094f85bb11f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleportTarget: {fileID: 958439140484738220}
+  requiredTag: Player
+  matchRotation: 0
+  preserveVelocity: 1
 --- !u!4 &5355894172578370671 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 270394267970809000, guid: 3fe42846fb4bc414b84401e88f8f9532, type: 3}
