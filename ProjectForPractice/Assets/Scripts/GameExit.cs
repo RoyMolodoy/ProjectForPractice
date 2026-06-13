@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class GameExit : MonoBehaviour
 {
-    // Цей метод ми повісимо на кнопку
     public void QuitGame()
     {
         Application.Quit();

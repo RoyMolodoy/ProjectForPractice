@@ -4,8 +4,7 @@ using System;
 
 public class KeybindManager : MonoBehaviour
 {
-    [Header("Посилання на Гравця (необов'язково)")]
-    public PlayerMovement player; // Якщо гравець на сцені, ми одразу оновимо йому кнопки
+    public PlayerMovement player;
 
     [Header("Тексти на кнопках (TMP)")]
     public TextMeshProUGUI leftKeyText;

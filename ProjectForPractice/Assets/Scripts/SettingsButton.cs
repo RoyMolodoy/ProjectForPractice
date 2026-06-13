@@ -2,17 +2,24 @@ using UnityEngine;
 
 public class SettingsButton : MonoBehaviour
 {
-    [Header("яке меню в≥дкривати/закривати?")]
-    public GameObject menuPanel; // ѕерет€гни сюди свою панель меню
+    public GameObject menuPanel;
 
-    // ÷ей метод в≥шаЇмо на кнопку
     public void ToggleMenu()
     {
         if (menuPanel != null)
         {
-            // Ѕеремо поточний стан меню (true або false) ≥ ставимо протилежний (!)
             bool currentState = menuPanel.activeSelf;
-            menuPanel.SetActive(!currentState);
+
+            if (!currentState)
+            {
+                Time.timeScale = 0f;
+                menuPanel.SetActive(true);
+            }
+            else
+            {
+                Time.timeScale = 1f;
+                menuPanel.SetActive(false);
+            }
         }
         else
         {

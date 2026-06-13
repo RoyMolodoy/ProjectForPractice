@@ -25,6 +25,10 @@ public class LevelRewardManager : MonoBehaviour
     [Header("Анімація UI")]
     public float fadeDuration = 0.3f; // Швидкість плавного з'явлення
 
+    public TextMeshProUGUI Defence;
+    public TextMeshProUGUI Damage;
+    public TextMeshProUGUI Health;
+
     private List<SkillData> currentChoices;
     private CanvasGroup canvasGroup; // Компонент для керування прозорістю
 
@@ -195,6 +199,7 @@ public class LevelRewardManager : MonoBehaviour
                 var hpSystemMax = player.GetComponent<HPSystem>();
                 if (hpSystemMax != null)
                 {
+                    Health.text = $"{hpSystemMax.MaxHP + skill.value}";
                     hpSystemMax.MaxHP += skill.value;
                     hpSystemMax.HP += skill.value;
 
@@ -205,11 +210,13 @@ public class LevelRewardManager : MonoBehaviour
 
             case SkillType.DefenseUp:
                 var hpSysDef = player.GetComponent<HPSystem>();
+                Defence.text = $"{hpSysDef.defense + skill.value}";
                 if (hpSysDef != null) hpSysDef.defense += skill.value;
                 break;
 
             case SkillType.DamageUp:
                 var attackScript = player.GetComponent<PlayerAttack>();
+                Damage.text = $"{attackScript.attackDamage + (int)skill.value}";
                 if (attackScript != null) attackScript.attackDamage += (int)skill.value;
                 break;
 
