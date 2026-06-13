@@ -5,8 +5,15 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Skills (Unlockable)")]
-    public bool canDoubleJump = false; // Вмикається через Skill System
-    public bool canDash = false;       // Вмикається через Skill System
+    public bool canDoubleJump = false;
+    public bool canDash = false;
+
+    // НОВИЙ БЛОК: Кнопки управління, які ми будемо міняти з налаштувань
+    [Header("Controls")]
+    public KeyCode leftKey = KeyCode.A;
+    public KeyCode rightKey = KeyCode.D;
+    public KeyCode jumpKey = KeyCode.Space;
+    public KeyCode dashKey = KeyCode.LeftShift; // Переніс сюди для зручності
 
     [Header("Movement")]
     public float moveSpeed = 8f;
@@ -14,16 +21,15 @@ public class PlayerMovement : MonoBehaviour
     [Header("Jump")]
     public bool useVelocityJump = true;
     public float jumpForce = 14f;
-    public float doubleJumpForce = 12f; // Сила второго стрибка
+    public float doubleJumpForce = 12f;
     public Transform groundCheck;
     public LayerMask groundLayer;
     public float groundCheckRadius = 0.12f;
 
     [Header("Dash")]
-    public float dashSpeed = 20f;       // Швидкість ривка
-    public float dashDuration = 0.2f;   // Скільки часу триває ривок
-    public float dashCooldown = 1f;     // Перезарядка ривка
-    public KeyCode dashKey = KeyCode.F; // Кнопка для дешу
+    public float dashSpeed = 20f;
+    public float dashDuration = 0.2f;
+    public float dashCooldown = 1f;
 
     [Header("Debug")]
     public bool debugDraw = true;
@@ -56,7 +62,15 @@ public class PlayerMovement : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        defaultGravity = rb.gravityScale; // Зберігаємо стандартну гравітацію
+        defaultGravity = rb.gravityScale;
+
+        if (PlayerPrefs.HasKey("LeftKey"))
+        {
+            leftKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("LeftKey"));
+            rightKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("RightKey"));
+            jumpKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("JumpKey"));
+            dashKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("DashKey"));
+        }
 
         if (rb.bodyType != RigidbodyType2D.Dynamic)
             Debug.LogWarning($"{name}: Rigidbody2D должен быть Dynamic для прыжка (текущий тип: {rb.bodyType}).", this);
@@ -67,29 +81,30 @@ public class PlayerMovement : MonoBehaviour
         if (animsController == null)
             animsController = GetComponentInChildren<AnimsController>();
 
-        if (animsController == null && debugDraw)
-            Debug.LogWarning($"{name}: AnimsController не найден. Привяжите в инспекторе.", this);
-
         facingRight = Mathf.Approximately(transform.localEulerAngles.y, 0f);
     }
 
     void Update()
     {
-        // Якщо персонаж робить деш, блокуємо інше управління
         if (isDashing) return;
 
-        horizontal = Input.GetAxisRaw("Horizontal");
+        // --- ЗМІНЕНА ЛОГІКА ЧИТАННЯ КНОПОК ---
 
-        if (Input.GetButtonDown("Jump"))
+        // Визначаємо напрямок руху на основі наших KeyCode (імітуємо GetAxisRaw)
+        horizontal = 0f;
+        if (Input.GetKey(rightKey)) horizontal += 1f;
+        if (Input.GetKey(leftKey)) horizontal -= 1f;
+
+        // Перевіряємо нашу кнопку стрибка
+        if (Input.GetKeyDown(jumpKey))
             jumpRequest = true;
 
-        // Логіка запиту на деш
+        // Логіка запиту на деш (dashKey тепер у блоці Controls)
         if (canDash && Input.GetKeyDown(dashKey) && dashCooldownTimer <= 0f && !isDashing)
         {
             dashRequest = true;
         }
 
-        // Таймер перезарядки дешу
         if (dashCooldownTimer > 0f)
         {
             dashCooldownTimer -= Time.deltaTime;
@@ -100,24 +115,18 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        // --- ЛОГІКА ДЕШУ ---
         if (dashRequest)
         {
             StartCoroutine(PerformDash());
             dashRequest = false;
-            return; // Пропускаємо звичайний рух у цьому кадрі
+            return;
         }
 
-        if (isDashing)
-        {
-            return; // Якщо ми в процесі дешу, фізика керується корутиною
-        }
+        if (isDashing) return;
 
-        // --- ЗВИЧАЙНИЙ РУХ ---
         int mask = (groundLayer.value == 0) ? ~0 : groundLayer.value;
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, mask);
 
-        // Відновлюємо можливість подвійного стрибка, коли торкаємося землі
         if (isGrounded)
         {
             doubleJumpAvailable = true;
@@ -125,7 +134,6 @@ public class PlayerMovement : MonoBehaviour
 
         rb.velocity = new Vector2(horizontal * moveSpeed, rb.velocity.y);
 
-        // --- ЛОГІКА СТРИБКА ---
         if (jumpRequest)
         {
             if (isGrounded)
@@ -135,7 +143,7 @@ public class PlayerMovement : MonoBehaviour
             else if (canDoubleJump && doubleJumpAvailable)
             {
                 ExecuteJump(doubleJumpForce);
-                doubleJumpAvailable = false; // Використали другий стрибок
+                doubleJumpAvailable = false;
             }
             else
             {
@@ -156,7 +164,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            rb.velocity = new Vector2(rb.velocity.x, 0f); // Скидаємо швидкість падіння перед стрибком
+            rb.velocity = new Vector2(rb.velocity.x, 0f);
             rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
         }
     }
@@ -198,8 +206,7 @@ public class PlayerMovement : MonoBehaviour
 
     void UpdateAnimations()
     {
-        if (animsController == null)
-            return;
+        if (animsController == null) return;
 
         bool moving = Mathf.Abs(horizontal) > animHorizontalDeadzone;
         animsController.SetRunning(moving && isGrounded && !isDashing);
