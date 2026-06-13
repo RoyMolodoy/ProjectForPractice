@@ -21,9 +21,5 @@ public class SettingsButton : MonoBehaviour
                 menuPanel.SetActive(false);
             }
         }
-        else
-        {
-            Debug.LogWarning("“и забув перет€гнути панель меню в ≥нспектор!");
-        }
     }
 }
