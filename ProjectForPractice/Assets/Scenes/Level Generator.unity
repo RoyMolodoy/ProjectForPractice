@@ -282,9 +282,9 @@ MonoBehaviour:
   followY: 1
   smoothFollow: 1
   smoothSpeed: 8
-  useBounds: 0
+  useBounds: 1
   minBounds: {x: -Infinity, y: -Infinity}
-  maxBounds: {x: Infinity, y: Infinity}
+  maxBounds: {x: Infinity, y: 4}
 --- !u!114 &1391249650
 MonoBehaviour:
   m_ObjectHideFlags: 0
