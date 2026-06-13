@@ -7787,8 +7787,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7525911147001378585}
-  - component: {fileID: 7058326718726735424}
   - component: {fileID: 7569386261202599220}
+  - component: {fileID: 7058326718726735424}
   m_Layer: 0
   m_Name: Border (1)
   m_TagString: Untagged
@@ -7811,22 +7811,6 @@ Transform:
   m_Father: {fileID: 3149775266386162907}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7058326718726735424
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3658155846669877319}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0b17616b58908d4e82d094f85bb11f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  teleportTarget: {fileID: 7946367164657955184}
-  requiredTag: Player
-  matchRotation: 0
-  preserveVelocity: 0
 --- !u!61 &7569386261202599220
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7837,7 +7821,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -7853,6 +7837,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 20, y: 3}
   m_EdgeRadius: 0
+--- !u!114 &7058326718726735424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3658155846669877319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0b17616b58908d4e82d094f85bb11f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  respawnPoint: {fileID: 7946367164657955184}
 --- !u!1 &4920673946035101586
 GameObject:
   m_ObjectHideFlags: 0
@@ -7862,8 +7859,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 396290649678950645}
-  - component: {fileID: 61679871126844290}
   - component: {fileID: 7064633392864256392}
+  - component: {fileID: 61679871126844290}
   m_Layer: 0
   m_Name: Border (2)
   m_TagString: Untagged
@@ -7886,22 +7883,6 @@ Transform:
   m_Father: {fileID: 3149775266386162907}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &61679871126844290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4920673946035101586}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0b17616b58908d4e82d094f85bb11f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  teleportTarget: {fileID: 6469925511067287199}
-  requiredTag: Player
-  matchRotation: 0
-  preserveVelocity: 0
 --- !u!61 &7064633392864256392
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7912,7 +7893,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -7928,6 +7909,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 30, y: 3}
   m_EdgeRadius: 0
+--- !u!114 &61679871126844290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4920673946035101586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0b17616b58908d4e82d094f85bb11f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  respawnPoint: {fileID: 6469925511067287199}
 --- !u!1 &8925966263436733563
 GameObject:
   m_ObjectHideFlags: 0
@@ -7937,8 +7931,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4927399063875547919}
-  - component: {fileID: 7134532262698596101}
   - component: {fileID: 7511255836872140997}
+  - component: {fileID: 7134532262698596101}
   m_Layer: 0
   m_Name: Border
   m_TagString: Untagged
@@ -7961,22 +7955,6 @@ Transform:
   m_Father: {fileID: 3149775266386162907}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7134532262698596101
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8925966263436733563}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0b17616b58908d4e82d094f85bb11f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  teleportTarget: {fileID: 7719761817315722347}
-  requiredTag: Player
-  matchRotation: 0
-  preserveVelocity: 0
 --- !u!61 &7511255836872140997
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7987,7 +7965,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -8003,3 +7981,16 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 30, y: 3}
   m_EdgeRadius: 0
+--- !u!114 &7134532262698596101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8925966263436733563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0b17616b58908d4e82d094f85bb11f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  respawnPoint: {fileID: 7719761817315722347}

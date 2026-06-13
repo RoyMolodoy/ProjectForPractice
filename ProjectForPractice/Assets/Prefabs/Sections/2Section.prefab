@@ -1,5 +1,78 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3058153018478124615
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9106806121473192522}
+  - component: {fileID: 3457700432117145614}
+  - component: {fileID: 7046020374344988478}
+  m_Layer: 0
+  m_Name: Border
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9106806121473192522
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3058153018478124615}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 8.721924, y: -8.980839, z: -0.2932432}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3873692606461624587}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &3457700432117145614
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3058153018478124615}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.721261, y: 0.67380905}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 4.07485, y: 1.1328659}
+  m_EdgeRadius: 0
+--- !u!114 &7046020374344988478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3058153018478124615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0b17616b58908d4e82d094f85bb11f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  respawnPoint: {fileID: 4862846039575920805}
+  playerTag: Player
 --- !u!1 &3873692604877650776
 GameObject:
   m_ObjectHideFlags: 0
@@ -3206,6 +3279,7 @@ Transform:
   - {fileID: 3873692605668996465}
   - {fileID: 3873692605433174840}
   - {fileID: 4862846039575920805}
+  - {fileID: 9106806121473192522}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3589,14 +3663,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: WaterSimple
       objectReference: {fileID: 0}
-    - target: {fileID: 270394267970809007, guid: 3fe42846fb4bc414b84401e88f8f9532, type: 3}
-      propertyPath: m_Size.y
-      value: 0.7203393
-      objectReference: {fileID: 0}
-    - target: {fileID: 270394267970809007, guid: 3fe42846fb4bc414b84401e88f8f9532, type: 3}
-      propertyPath: m_Offset.y
-      value: 0.36016965
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3fe42846fb4bc414b84401e88f8f9532, type: 3}
 --- !u!4 &3891880567812942738 stripped
@@ -3604,24 +3670,3 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 270394267970809000, guid: 3fe42846fb4bc414b84401e88f8f9532, type: 3}
   m_PrefabInstance: {fileID: 3873692606224385850}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3891880567812942740 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 270394267970809006, guid: 3fe42846fb4bc414b84401e88f8f9532, type: 3}
-  m_PrefabInstance: {fileID: 3873692606224385850}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7193331737049305623
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3891880567812942740}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0b17616b58908d4e82d094f85bb11f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  teleportTarget: {fileID: 4862846039575920805}
-  requiredTag: Player
-  matchRotation: 0
-  preserveVelocity: 0
