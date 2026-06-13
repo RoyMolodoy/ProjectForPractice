@@ -148,7 +148,7 @@ public class LevelRewardManager : MonoBehaviour
             // ÇÁ²ËÜØÅÍÍß ØÊÎÄÈ
             case SkillType.DamageUp:
                 var attackScript = player.GetComponent<PlayerAttack>();
-                if (attackScript != null) attackScript.attackDamage += skill.value;
+                if (attackScript != null) attackScript.attackDamage += (int)skill.value;
                 break;
 
             // ËÅÃÅÍÄÀĞÊÀ: ÄÅØ

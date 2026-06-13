@@ -17,4 +17,4 @@ MonoBehaviour:
   skillIcon: {fileID: 0}
   type: 3
   rarity: 0
-  value: 1
+  value: 0.1

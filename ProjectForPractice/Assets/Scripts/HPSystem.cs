@@ -5,9 +5,9 @@ using UnityEngine.UI;
 public class HPSystem : MonoBehaviour
 {
     [Header("Health Settings")]
-    public int HP = 3;
-    public int MaxHP = 3;
-    public int defense = 0;
+    public float HP = 3;
+    public float MaxHP = 3;
+    public float defense = 1;
     public Image HPBar;
 
     [Header("Invulnerability (Тільки для Player)")]
@@ -28,10 +28,11 @@ public class HPSystem : MonoBehaviour
         }
     }
 
-    void MinusHP(int minusHP)
+    void MinusHP(float minusHP)
     {
         if (_isInvulnerable) return;
-
+        if (defense > 0)
+            minusHP = minusHP/defense;
         HP -= minusHP;
 
         // Оновлюємо UI

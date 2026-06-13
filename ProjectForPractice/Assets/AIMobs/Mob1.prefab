@@ -200,7 +200,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 3
   MaxHP: 3
-  defense: 0
+  defense: 1
   HPBar: {fileID: 0}
   invulnerabilityDuration: 1.5
   numberOfFlashes: 6

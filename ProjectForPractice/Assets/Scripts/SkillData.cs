@@ -9,7 +9,7 @@ public class SkillData : ScriptableObject
 
     public SkillType type;
     public SkillRarity rarity;
-    public int value;
+    public float value;
 }
 
 public enum SkillRarity
