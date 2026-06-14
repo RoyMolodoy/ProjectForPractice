@@ -77,6 +77,7 @@ GameObject:
   - component: {fileID: 2393417924929001700}
   - component: {fileID: 1231083100407566421}
   - component: {fileID: 6068839423411600307}
+  - component: {fileID: 4207141455377087003}
   m_Layer: 7
   m_Name: Boss
   m_TagString: Enemy
@@ -172,6 +173,9 @@ MonoBehaviour:
   beamPrefab: {fileID: 757262748957066928, guid: eea8f927cf8ff5a41b85998d43e55d43, type: 3}
   beamSpawnHeight: 7
   flyingHeadPrefab: {fileID: 8023118838463693340, guid: b0436d9f93aed5a4186bef89b8907553, type: 3}
+  spawnOnDeathPrefab: {fileID: 5087392343025798831, guid: 02aa345f5527a194f81b1193f6d031f5, type: 3}
+  spawnOffset: {x: 0, y: -4, z: 0}
+  spawnSmoothDuration: 0.5
   HP: {fileID: 6068839423411600307}
 --- !u!50 &1398769622665473511
 Rigidbody2D:
@@ -249,3 +253,26 @@ MonoBehaviour:
   invulnerabilityDuration: 1.5
   numberOfFlashes: 6
   spriteRenderer: {fileID: 0}
+--- !u!114 &4207141455377087003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8831602977527008640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85b56f6b6aceec947a7f07d0469555a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPlayer: 0
+  timeToDestroy: 1
+  animator: {fileID: 1231083100407566421}
+  runningParam: isRunning
+  jumpingParam: isJumping
+  fallingParam: isFalling
+  DashParam: Dash
+  attackingBoolParam: isAttacking
+  isPlayerAttacking1: isPlayerAttacking1
+  isPlayerAttacking2: isPlayerAttacking2
+  debugLogs: 0

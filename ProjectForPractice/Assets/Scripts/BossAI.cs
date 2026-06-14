@@ -1,33 +1,40 @@
-using System.Collections;
+п»їusing System.Collections;
 using UnityEngine;
 
 public class BossAI : MonoBehaviour
 {
-    [Header("Ціль (Гравець)")]
+    [Header("Р¦С–Р»СЊ (Р“СЂР°РІРµС†СЊ)")]
     [SerializeField] private string playerTag = "Player";
     private Transform _player;
 
-    [Header("Зір Боса")]
-    [SerializeField] private float visionRange = 15f; // Радіус, в якому бос активується
+    [Header("Р—С–СЂ Р‘РѕСЃР°")]
+    [SerializeField] private float visionRange = 15f;
 
-    [Header("Загальні налаштування")]
+    [Header("Р—Р°РіР°Р»СЊРЅС– РЅР°Р»Р°С€С‚СѓРІР°РЅРЅСЏ")]
     [SerializeField] private float attackCooldown = 3.5f;
     [SerializeField] private Transform staffTip;
 
-    [Header("Атака 1: Промінь зверху")]
+    [Header("РђС‚Р°РєР° 1: РџСЂРѕРјС–РЅСЊ Р·РІРµСЂС…Сѓ")]
     [SerializeField] private GameObject beamPrefab;
     [SerializeField] private float beamSpawnHeight = 7f;
 
-    [Header("Атака 2: Летюча Голова")]
+    [Header("РђС‚Р°РєР° 2: Р›РµС‚СЋС‡Р° Р“РѕР»РѕРІР°")]
     [SerializeField] private GameObject flyingHeadPrefab;
 
-    [Header("Компоненти")]
+    [Header("РџРѕРґС–С— РїС–СЃР»СЏ СЃРјРµСЂС‚С–")]
+    [SerializeField] private GameObject spawnOnDeathPrefab;
+    [SerializeField] private Vector3 spawnOffset = new Vector3(0f, -1f, 0f); // РќР°Р»Р°С€С‚СѓРІР°РЅРЅСЏ РїРѕР·РёС†С–С— (РЅРёР¶С‡Рµ)
+    [SerializeField] private float spawnSmoothDuration = 0.5f; // Р—Р° СЃРєС–Р»СЊРєРё СЃРµРєСѓРЅРґ РѕР±'С”РєС‚ РІРёСЂРѕСЃС‚Рµ
+
+    [Header("РљРѕРјРїРѕРЅРµРЅС‚Рё")]
     [SerializeField] public HPSystem HP;
     private Animator _anim;
 
     private float _lastAttackTime;
     private bool _isAttacking = false;
     private bool _facingRight = true;
+
+    private bool _isDead = false;
 
     private void Awake()
     {
@@ -48,18 +55,23 @@ public class BossAI : MonoBehaviour
 
     private void Update()
     {
+        if (_isDead) return;
+
+        // РџР•Р Р•Р’Р†Р РљРђ РќРђ РЎРњР•Р РўР¬
+        if (HP != null && HP.HP <= 0)
+        {
+            Die();
+            return;
+        }
+
         if (_player == null || _isAttacking) return;
 
-        // Вираховуємо дистанцію від боса до гравця
         float distanceToPlayer = Vector2.Distance(transform.position, _player.position);
 
-        // Якщо гравець зайшов у зону бачення боса
         if (distanceToPlayer <= visionRange)
         {
-            // 1. Бос розвертається і постійно дивиться на гравця
             HandleFlip();
 
-            // 2. Якщо таймер відкату пройшов - бос атакує
             if (Time.time - _lastAttackTime >= attackCooldown)
             {
                 ChooseRandomAttack();
@@ -98,7 +110,6 @@ public class BossAI : MonoBehaviour
         }
     }
 
-    // --- ЛОГІКА АТАКИ 1: ПРОМІНЬ ЗВЕРХУ ---
     private IEnumerator SkyBeamAttackCoroutine()
     {
         _isAttacking = true;
@@ -116,7 +127,6 @@ public class BossAI : MonoBehaviour
         _isAttacking = false;
     }
 
-    // --- ЛОГІКА АТАКИ 2: ЛЕТЮЧА ГОЛОВА ---
     private IEnumerator FlyingHeadAttackCoroutine()
     {
         _isAttacking = true;
@@ -137,11 +147,90 @@ public class BossAI : MonoBehaviour
         _isAttacking = false;
     }
 
-    // --- ВІЗУАЛІЗАЦІЯ ЗОРУ В UNITY ---
+    // --- Р›РћР“Р†РљРђ РЎРњР•Р РўР† ---
+    private void Die()
+    {
+        _isDead = true;
+
+        StopAllCoroutines();
+
+        if (_anim != null)
+        {
+            _anim.SetBool("BeamAttack", false);
+            _anim.SetBool("HeadAttack", false);
+        }
+
+        StartCoroutine(DeathTimerRoutine());
+    }
+
+    private IEnumerator DeathTimerRoutine()
+    {
+        yield return new WaitForSeconds(3f);
+
+        if (spawnOnDeathPrefab != null)
+        {
+            // 1. Р—РјС–С‰СѓС”РјРѕ РїРѕР·РёС†С–СЋ СЃРїР°РІРЅСѓ (Р·Р° Р·Р°РјРѕРІС‡СѓРІР°РЅРЅСЏРј Y = -1, С‚РѕР±С‚Рѕ РїС–Рґ РЅРѕРіРё Р±РѕСЃСѓ)
+            Vector3 spawnPos = transform.position + spawnOffset;
+
+            // 2. РЎС‚РІРѕСЂСЋС”РјРѕ РѕР±'С”РєС‚
+            GameObject spawnedObj = Instantiate(spawnOnDeathPrefab, spawnPos, Quaternion.identity);
+
+            // 3. РђРІС‚РѕРјР°С‚РёС‡РЅРѕ РІС–С€Р°С”РјРѕ РЅР° РЅСЊРѕРіРѕ РЅР°С€ СЃРєСЂРёРїС‚ РїР»Р°РІРЅРѕС— РїРѕСЏРІРё
+            if (spawnSmoothDuration > 0f)
+            {
+                SmoothScaler scaler = spawnedObj.AddComponent<SmoothScaler>();
+                scaler.duration = spawnSmoothDuration;
+            }
+        }
+
+        Destroy(gameObject);
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
-        // Малює блакитне коло навколо боса, щоб ти бачив, де починається його зона агро
         Gizmos.DrawWireSphere(transform.position, visionRange);
+
+        // РњР°Р»СЋС”РјРѕ РєСЂР°РїРѕС‡РєСѓ, РґРµ СЃР°РјРµ Р·'СЏРІРёС‚СЊСЃСЏ Р»СѓС‚ РїС–СЃР»СЏ СЃРјРµСЂС‚С– (С‰РѕР± С‚РѕР±С– Р±СѓР»Рѕ Р»РµРіС€Рµ РЅР°Р»Р°С€С‚РѕРІСѓРІР°С‚Рё)
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(transform.position + spawnOffset, 0.2f);
+    }
+}
+
+// ====================================================================
+// Р”РћРџРћРњР†Р–РќРР™ РЎРљР РРџРў (РђРІС‚РѕРјР°С‚РёС‡РЅРѕ Р·Р±С–Р»СЊС€СѓС” РѕР±'С”РєС‚ С– СЃР°РјРѕР·РЅРёС‰СѓС”С‚СЊСЃСЏ)
+// ====================================================================
+public class SmoothScaler : MonoBehaviour
+{
+    public float duration = 0.5f;
+    private Vector3 originalScale;
+
+    private void Start()
+    {
+        // Р—Р°РїР°Рј'СЏС‚РѕРІСѓС”РјРѕ, СЏРєРѕРіРѕ СЂРѕР·РјС–СЂСѓ РјР°РІ Р±СѓС‚Рё РѕР±'С”РєС‚
+        originalScale = transform.localScale;
+
+        // Р—РјРµРЅС€СѓС”РјРѕ Р№РѕРіРѕ РґРѕ РЅСѓР»СЏ (С‰РѕР± РІС–РЅ Р±СѓРІ РЅРµРІРёРґРёРјРёРј)
+        transform.localScale = Vector3.zero;
+
+        // Р—Р°РїСѓСЃРєР°С”РјРѕ Р°РЅС–РјР°С†С–СЋ Р·СЂРѕСЃС‚Р°РЅРЅСЏ
+        StartCoroutine(ScaleRoutine());
+    }
+
+    private IEnumerator ScaleRoutine()
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(Vector3.zero, originalScale, elapsed / duration);
+            yield return null;
+        }
+
+        // Р“Р°СЂР°РЅС‚СѓС”РјРѕ, С‰Рѕ СЂРѕР·РјС–СЂ С–РґРµР°Р»СЊРЅРёР№
+        transform.localScale = originalScale;
+
+        // Р’РёРґР°Р»СЏС”РјРѕ Р¦Р•Р™ РЎРљР РРџРў (РЅРµ СЃР°Рј РѕР±'С”РєС‚!), Р±Рѕ РІС–РЅ Р±С–Р»СЊС€Рµ РЅРµ РїРѕС‚СЂС–Р±РµРЅ
+        Destroy(this);
     }
 }

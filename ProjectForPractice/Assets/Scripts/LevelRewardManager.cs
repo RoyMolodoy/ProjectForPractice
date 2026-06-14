@@ -11,6 +11,7 @@ public class LevelRewardManager : MonoBehaviour
 
     [Header("UI Налаштування")]
     public GameObject rewardPanel;
+    public GameObject endPanel;
     public Button[] skillButtons;
     public TextMeshProUGUI[] skillNamesTexts;
     public TextMeshProUGUI[] skillDescTexts;
@@ -33,7 +34,10 @@ public class LevelRewardManager : MonoBehaviour
     public bool isPanelActive = false;
 
     private List<SkillData> currentChoices;
-    private CanvasGroup canvasGroup;
+
+    // Два окремі CanvasGroup для кожної панелі
+    private CanvasGroup rewardCanvasGroup;
+    private CanvasGroup endCanvasGroup;
 
     private Dictionary<SkillType, Action<GameObject, SkillData>> skillFunctions;
 
@@ -57,15 +61,27 @@ public class LevelRewardManager : MonoBehaviour
 
     private void Start()
     {
+        // Налаштовуємо панель нагород
         if (rewardPanel != null)
         {
-            canvasGroup = rewardPanel.GetComponent<CanvasGroup>();
-            if (canvasGroup == null)
+            rewardCanvasGroup = rewardPanel.GetComponent<CanvasGroup>();
+            if (rewardCanvasGroup == null)
             {
-                canvasGroup = rewardPanel.AddComponent<CanvasGroup>();
+                rewardCanvasGroup = rewardPanel.AddComponent<CanvasGroup>();
             }
-
             rewardPanel.SetActive(false);
+        }
+
+        // Налаштовуємо фінальну панель
+        if (endPanel != null)
+        {
+            endCanvasGroup = endPanel.GetComponent<CanvasGroup>();
+            if (endCanvasGroup == null)
+            {
+                endCanvasGroup = endPanel.AddComponent<CanvasGroup>();
+            }
+            endCanvasGroup.alpha = 0f; // Робимо прозорою на старті
+            endPanel.SetActive(false);
         }
     }
 
@@ -73,9 +89,7 @@ public class LevelRewardManager : MonoBehaviour
     {
         if (rewardPanel == null) return;
 
-        // 1. Одразу вимикаємо керування та атаку гравця
         TogglePlayerScripts(false);
-
         isPanelActive = true;
 
         currentChoices = new List<SkillData>();
@@ -125,8 +139,8 @@ public class LevelRewardManager : MonoBehaviour
 
     public void ChooseSkill(int index)
     {
-        canvasGroup.interactable = false;
-        canvasGroup.blocksRaycasts = false;
+        rewardCanvasGroup.interactable = false;
+        rewardCanvasGroup.blocksRaycasts = false;
 
         SkillData chosenSkill = currentChoices[index];
         ApplySkillEffect(chosenSkill);
@@ -141,48 +155,59 @@ public class LevelRewardManager : MonoBehaviour
 
     private IEnumerator FadeInPanel()
     {
-        canvasGroup.alpha = 0f;
-        rewardPanel.transform.localScale = new Vector3(0.8f, 0.8f, 1f);
+        rewardCanvasGroup.alpha = 0f;
 
-        canvasGroup.interactable = true;
-        canvasGroup.blocksRaycasts = true;
+        rewardCanvasGroup.interactable = true;
+        rewardCanvasGroup.blocksRaycasts = true;
 
         float elapsed = 0f;
 
         while (elapsed < fadeDuration)
         {
             elapsed += Time.unscaledDeltaTime;
-            float t = elapsed / fadeDuration;
-
-            canvasGroup.alpha = Mathf.Lerp(0f, 1f, t);
-            float scale = Mathf.Lerp(0.8f, 1f, t);
-            rewardPanel.transform.localScale = new Vector3(scale, scale, 1f);
-
+            // Змінюємо ТІЛЬКИ прозорість, масштаб не чіпаємо
+            rewardCanvasGroup.alpha = Mathf.Lerp(0f, 1f, elapsed / fadeDuration);
             yield return null;
         }
 
-        canvasGroup.alpha = 1f;
-        rewardPanel.transform.localScale = Vector3.one;
+        rewardCanvasGroup.alpha = 1f;
     }
 
     private IEnumerator FadeOutPanel()
     {
         float elapsed = 0f;
 
+        // 1. Плавно ховаємо панель нагород (тільки прозорість)
         while (elapsed < fadeDuration)
         {
             elapsed += Time.unscaledDeltaTime;
-            float t = elapsed / fadeDuration;
-
-            canvasGroup.alpha = Mathf.Lerp(1f, 0f, t);
-            float scale = Mathf.Lerp(1f, 0.8f, t);
-            rewardPanel.transform.localScale = new Vector3(scale, scale, 1f);
-
+            rewardCanvasGroup.alpha = Mathf.Lerp(1f, 0f, elapsed / fadeDuration);
             yield return null;
         }
 
         rewardPanel.SetActive(false);
-        Time.timeScale = 1f;
+
+        // 2. Плавно проявляємо фінальну панель (endPanel)
+        if (endPanel != null)
+        {
+            endPanel.SetActive(true);
+            endCanvasGroup.interactable = true;
+            endCanvasGroup.blocksRaycasts = true;
+
+            endCanvasGroup.alpha = 0f;
+
+            elapsed = 0f; // Скидаємо таймер для нової анімації
+
+            while (elapsed < fadeDuration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                // Змінюємо ТІЛЬКИ прозорість
+                endCanvasGroup.alpha = Mathf.Lerp(0f, 1f, elapsed / fadeDuration);
+                yield return null;
+            }
+
+            endCanvasGroup.alpha = 1f;
+        }
 
         isPanelActive = false;
 
@@ -224,6 +249,10 @@ public class LevelRewardManager : MonoBehaviour
 
         Debug.Log($"<color=green>Вибрано скіл:</color> {skill.skillName}");
     }
+
+    // =========================================================
+    // --- ОКРЕМІ ФУНКЦІЇ ДЛЯ КОЖНОГО СКІЛА ---
+    // =========================================================
 
     private void ApplyHealFull(GameObject player, SkillData skill)
     {
