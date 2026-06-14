@@ -1,39 +1,40 @@
-using System.Collections;
+п»їusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System; // Обов'язково додаємо для Action
+using System;
 
 public class LevelRewardManager : MonoBehaviour
 {
     public static LevelRewardManager Instance;
 
-    [Header("UI Налаштування")]
+    [Header("UI РќР°Р»Р°С€С‚СѓРІР°РЅРЅСЏ")]
     public GameObject rewardPanel;
     public Button[] skillButtons;
     public TextMeshProUGUI[] skillNamesTexts;
     public TextMeshProUGUI[] skillDescTexts;
 
-    [Header("Списки скілів")]
-    public List<SkillData> commonSkills;     // Звичайні картки
-    public List<SkillData> legendarySkills;  // Легендарні картки
+    [Header("РЎРїРёСЃРєРё СЃРєС–Р»С–РІ")]
+    public List<SkillData> commonSkills;
+    public List<SkillData> legendarySkills;
 
-    [Header("Налаштування")]
+    [Header("РќР°Р»Р°С€С‚СѓРІР°РЅРЅСЏ")]
     [Range(0, 100)]
-    public int legendaryChance = 10; // Шанс легендарки (10%)
+    public int legendaryChance = 10;
 
-    [Header("Анімація UI")]
-    public float fadeDuration = 0.3f; // Швидкість плавного з'явлення
+    [Header("РђРЅС–РјР°С†С–СЏ UI")]
+    public float fadeDuration = 0.3f;
 
     public TextMeshProUGUI Defence;
     public TextMeshProUGUI Damage;
     public TextMeshProUGUI Health;
 
-    private List<SkillData> currentChoices;
-    private CanvasGroup canvasGroup; // Компонент для керування прозорістю
+    public bool isPanelActive = false;
 
-    // Словник, який зберігає зв'язок між типом скіла і відповідною функцією
+    private List<SkillData> currentChoices;
+    private CanvasGroup canvasGroup;
+
     private Dictionary<SkillType, Action<GameObject, SkillData>> skillFunctions;
 
     private void Awake()
@@ -43,7 +44,6 @@ public class LevelRewardManager : MonoBehaviour
         else
             Destroy(gameObject);
 
-        // Реєструємо наші функції у словнику при старті
         skillFunctions = new Dictionary<SkillType, Action<GameObject, SkillData>>
         {
             { SkillType.HealFull, ApplyHealFull },
@@ -72,6 +72,11 @@ public class LevelRewardManager : MonoBehaviour
     public void ShowRewards()
     {
         if (rewardPanel == null) return;
+
+        // 1. РћРґСЂР°Р·Сѓ РІРёРјРёРєР°С”РјРѕ РєРµСЂСѓРІР°РЅРЅСЏ С‚Р° Р°С‚Р°РєСѓ РіСЂР°РІС†СЏ
+        TogglePlayerScripts(false);
+
+        isPanelActive = true;
 
         currentChoices = new List<SkillData>();
         List<SkillData> tempCommon = new List<SkillData>(commonSkills);
@@ -178,34 +183,47 @@ public class LevelRewardManager : MonoBehaviour
 
         rewardPanel.SetActive(false);
         Time.timeScale = 1f;
+
+        isPanelActive = false;
+
+        yield return null;
+
+        TogglePlayerScripts(true);
     }
 
-    // --- ОНОВЛЕНИЙ МЕТОД ЗАСТОСУВАННЯ ЕФЕКТУ ---
+    private void TogglePlayerScripts(bool isActive)
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            PlayerMovement movement = player.GetComponent<PlayerMovement>();
+            PlayerAttack attack = player.GetComponent<PlayerAttack>();
+
+            if (movement != null) movement.enabled = isActive;
+            if (attack != null) attack.enabled = isActive;
+        }
+    }
+
     private void ApplySkillEffect(SkillData skill)
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player == null)
         {
-            Debug.LogError("Гравець не знайдений! Перевір тег 'Player'.");
+            Debug.LogError("Р“СЂР°РІРµС†СЊ РЅРµ Р·РЅР°Р№РґРµРЅРёР№! РџРµСЂРµРІС–СЂ С‚РµРі 'Player'.");
             return;
         }
 
-        // Шукаємо функцію у словнику і відразу виконуємо її
         if (skillFunctions.ContainsKey(skill.type))
         {
             skillFunctions[skill.type].Invoke(player, skill);
         }
         else
         {
-            Debug.LogWarning($"Для скіла {skill.type} ще не створено функції!");
+            Debug.LogWarning($"Р”Р»СЏ СЃРєС–Р»Р° {skill.type} С‰Рµ РЅРµ СЃС‚РІРѕСЂРµРЅРѕ С„СѓРЅРєС†С–С—!");
         }
 
-        Debug.Log($"<color=green>Вибрано скіл:</color> {skill.skillName}");
+        Debug.Log($"<color=green>Р’РёР±СЂР°РЅРѕ СЃРєС–Р»:</color> {skill.skillName}");
     }
-
-    // =========================================================
-    // --- ОКРЕМІ ФУНКЦІЇ ДЛЯ КОЖНОГО СКІЛА ---
-    // =========================================================
 
     private void ApplyHealFull(GameObject player, SkillData skill)
     {

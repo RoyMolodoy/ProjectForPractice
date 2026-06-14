@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(AnimsController))]
 public class PlayerAttack : MonoBehaviour
@@ -30,6 +31,11 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
         if (Input.GetButtonDown("Fire1") && Time.time >= lastAttackTime + attackCooldown)
         {
             Attack();
