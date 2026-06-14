@@ -67,7 +67,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -1660,7 +1660,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Necromancer_creativekind-Sheet_71: 1162475720
+      Necromancer_creativekind-Sheet_2: 705960699
       Necromancer_creativekind-Sheet_22: -1614074238
       Necromancer_creativekind-Sheet_49: -602911832
       Necromancer_creativekind-Sheet_35: 896429753
@@ -1693,8 +1693,8 @@ TextureImporter:
       Necromancer_creativekind-Sheet_3: -2132209526
       Necromancer_creativekind-Sheet_51: 1740113906
       Necromancer_creativekind-Sheet_28: -1252148966
-      Necromancer_creativekind-Sheet_14: -1118117608
       Necromancer_creativekind-Sheet_68: 269268383
+      Necromancer_creativekind-Sheet_14: -1118117608
       Necromancer_creativekind-Sheet_30: 2121733168
       Necromancer_creativekind-Sheet_52: 716466942
       Necromancer_creativekind-Sheet_25: 138046693
@@ -1730,9 +1730,9 @@ TextureImporter:
       Necromancer_creativekind-Sheet_16: -853020555
       Necromancer_creativekind-Sheet_31: -993433802
       Necromancer_creativekind-Sheet_15: 1762180977
+      Necromancer_creativekind-Sheet_71: 1162475720
       Necromancer_creativekind-Sheet_24: -20350655
       Necromancer_creativekind-Sheet_18: -2006822007
-      Necromancer_creativekind-Sheet_2: 705960699
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
