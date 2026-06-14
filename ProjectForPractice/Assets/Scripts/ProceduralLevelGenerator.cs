@@ -5,7 +5,10 @@ public class ProceduralLevelGenerator : MonoBehaviour
     [Header("Sections")]
     public Section startSection;
     public Section finishSection;
+    public Section FinishWithBoss;
     public Section[] middleSections;
+
+    public bool GenerateWithBoss;
 
     [Header("Settings")]
     [Range(1, 100)]
@@ -54,7 +57,12 @@ public class ProceduralLevelGenerator : MonoBehaviour
         }
 
         // Создаем финиш
-        SpawnSection(finishSection);
+        if(GenerateWithBoss)
+        {
+            SpawnSection(FinishWithBoss);
+        }
+        else
+            SpawnSection(finishSection);
     }
 
     private void SpawnRandomSection()

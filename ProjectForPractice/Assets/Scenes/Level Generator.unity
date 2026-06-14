@@ -153,7 +153,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startSection: {fileID: 5753170176683997713, guid: 764dea1a25d201b4aab4f4a1bb89110e, type: 3}
-  finishSection: {fileID: 4321221590596477370, guid: 898c588bde641274baf42632d47a462f, type: 3}
+  finishSection: {fileID: 1810098788127688761, guid: b54c941b16cd06f41a0edd6b9cb29dae, type: 3}
+  FinishWithBoss: {fileID: 2737378545357621696, guid: a55e621a84264b44bb102018cbb473f5, type: 3}
   middleSections:
   - {fileID: 2105898372265466154, guid: 14fc942fe340a5345b97d859490e98b5, type: 3}
   - {fileID: 4083633824901227420, guid: 72513a147e1d96540b50fe29d1c74b9a, type: 3}
@@ -161,6 +162,9 @@ MonoBehaviour:
   - {fileID: 7324887308980646837, guid: a040a0b2524fd0e48a56085476fd7375, type: 3}
   - {fileID: 1975828519629035405, guid: bf6822769efe60843ab699604ea3c03b, type: 3}
   - {fileID: 7950414027378243327, guid: 433501738822c5e408d17d5592238f79, type: 3}
+  - {fileID: 4321221590596477370, guid: 898c588bde641274baf42632d47a462f, type: 3}
+  - {fileID: 297566422521367062, guid: f4a9ec563e2a3084e94845b892dcd4ae, type: 3}
+  GenerateWithBoss: 1
   middleSectionCount: 4
 --- !u!4 &771698345
 Transform:
