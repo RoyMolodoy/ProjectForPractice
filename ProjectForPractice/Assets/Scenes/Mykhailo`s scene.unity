@@ -3420,10 +3420,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aSourse: {fileID: 2031054879}
   JumpAudio: {fileID: 8300000, guid: e9e0a83a88b278c479e8075485bf9823, type: 3}
-  Atack1Audio: {fileID: 0}
-  Atack2Audio: {fileID: 0}
+  Atack1Audio: {fileID: 8300000, guid: 0501856d3006a1243b01ae73ea83de9b, type: 3}
+  Atack2Audio: {fileID: 8300000, guid: 06c5ade1b69b7da48a17c73a4c031b37, type: 3}
   AtackHitAudio: {fileID: 0}
   StepsAudio: {fileID: 0}
+  PitchSwordSound: {x: 0.9, y: 1.1}
 --- !u!82 &2031054879
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3706,6 +3707,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1689743682417654555, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
+      propertyPath: isPlayer
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1689743682417654556, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
       propertyPath: canDash
       value: 1
@@ -3730,5 +3735,29 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 312496b25d842af4a938e96c7d5aaee0, type: 2}
+    - target: {fileID: 1689743682417654565, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
+      propertyPath: attackAngle
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 1689743682417654565, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
+      propertyPath: attackRadius
+      value: 1.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1689743682417654565, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
+      propertyPath: AlternativeAtack
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1689743682417654565, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
+      propertyPath: attackLockDelay1
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1689743682417654565, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
+      propertyPath: attackLockDelay2
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1689743682417654565, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
+      propertyPath: AttackAnimationChanse
+      value: 80
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}

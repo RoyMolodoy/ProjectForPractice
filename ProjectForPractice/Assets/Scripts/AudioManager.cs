@@ -13,6 +13,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] public AudioClip AtackHitAudio;
     [SerializeField] public AudioClip StepsAudio;
 
+    [SerializeField] public Vector2 PitchSwordSound = new Vector2(0.9f, 1.1f);
 
     // Start is called before the first frame update
     void Start()
@@ -32,4 +33,19 @@ public class AudioManager : MonoBehaviour
         aSourse.Play();
         Debug.Log("Jump sound played");
     }   
+
+    public void Atack1Sound()
+    {
+        aSourse.clip = Atack1Audio;
+        aSourse.pitch = UnityEngine.Random.Range(PitchSwordSound.x, PitchSwordSound.y);
+        aSourse.Play();
+        Debug.Log("Atack1 sound played");
+    }
+    public void Atack2Sound()
+    {
+        aSourse.clip = Atack2Audio;
+        aSourse.pitch = UnityEngine.Random.Range(PitchSwordSound.x, PitchSwordSound.y);
+        aSourse.Play();
+        Debug.Log("Atack1 sound played");
+    }
 }

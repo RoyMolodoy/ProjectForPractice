@@ -5,7 +5,7 @@ using TMPro;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Skills (Unlockable)")]
+    [Header("Skills")]
     public bool canDoubleJump = false;
     public bool canDash = false;
 
@@ -19,7 +19,6 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed = 8f;
 
     [Header("Jump")]
-    public bool useVelocityJump = true;
     public float jumpForce = 14f;
     public float doubleJumpForce = 12f;
     public Transform groundCheck;
@@ -31,123 +30,65 @@ public class PlayerMovement : MonoBehaviour
     public float dashDuration = 0.2f;
     public float dashCooldown = 1f;
 
-    [Header("Dash UI")]
-    public GameObject dashIconUI;
-    public TextMeshProUGUI dashCooldownText;
-    public float dashUIFadeDuration = 0.2f; // НОВЕ: Швидкість плавного з'явлення (в секундах)
-
-    [Header("Debug")]
-    public bool debugDraw = true;
-
-    [Header("Animation")]
-    [SerializeField] AnimsController animsController;
-    [SerializeField] float animHorizontalDeadzone = 0.1f;
-
-    [Header("Flip")]
-    [SerializeField] float flipDeadzone = 0.1f;
-
-    [Header("Fall settings")]
-    [SerializeField] float fallThreshold = -0.1f;
-
-    // Внутрішні змінні
     Rigidbody2D rb;
+
     float horizontal;
     bool isGrounded;
-    bool facingRight = true;
-
-    // Змінні станів
     bool jumpRequest;
     bool doubleJumpAvailable;
+
     bool dashRequest;
     bool isDashing;
     float dashCooldownTimer;
     float defaultGravity;
 
-    // НОВЕ: Змінні для керування плавним UI
-    private CanvasGroup dashCanvasGroup;
-    private Coroutine fadeCoroutine;
-    private bool isDashUIVisible = false;
+    float lastMoveDirection = 1f;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         defaultGravity = rb.gravityScale;
-
-        if (PlayerPrefs.HasKey("LeftKey"))
-        {
-            leftKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("LeftKey"));
-            rightKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("RightKey"));
-            jumpKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("JumpKey"));
-            dashKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("DashKey"));
-        }
-
-        if (rb.bodyType != RigidbodyType2D.Dynamic)
-            Debug.LogWarning($"{name}: Rigidbody2D должен быть Dynamic для прыжка.", this);
-
-        if (groundLayer.value == 0)
-            Debug.LogWarning($"{name}: LayerMask groundLayer не задан.", this);
-
-        if (animsController == null)
-            animsController = GetComponentInChildren<AnimsController>();
-
-        facingRight = Mathf.Approximately(transform.localEulerAngles.y, 0f);
-    }
-
-    void Start()
-    {
-        // НОВЕ: Автоматично налаштовуємо CanvasGroup для плавності
-        if (dashIconUI != null)
-        {
-            dashCanvasGroup = dashIconUI.GetComponent<CanvasGroup>();
-            if (dashCanvasGroup == null)
-            {
-                dashCanvasGroup = dashIconUI.AddComponent<CanvasGroup>();
-            }
-
-            // Робимо іконку невидимою при старті
-            dashCanvasGroup.alpha = 0f;
-            dashIconUI.SetActive(false);
-        }
     }
 
     void Update()
     {
         if (isDashing) return;
 
-        horizontal = 0f;
-        if (Input.GetKey(rightKey)) horizontal += 1f;
-        if (Input.GetKey(leftKey)) horizontal -= 1f;
+        bool attackLock = PlayerAttack.IsAttacking;
 
-        if (Input.GetKeyDown(jumpKey))
-            jumpRequest = true;
+        float input = 0f;
 
-        if (canDash && Input.GetKeyDown(dashKey) && dashCooldownTimer <= 0f && !isDashing)
+        //  ВАЖНО: INPUT ВСЕГДА СЧИТЫВАЕМ ДЛЯ АНИМАЦИЙ
+        if (Input.GetKey(rightKey)) input += 1f;
+        if (Input.GetKey(leftKey)) input -= 1f;
+
+        if (input != 0)
+            lastMoveDirection = input;
+
+        //  ДВИЖЕНИЕ БЛОКИРУЕМ, НО НЕ УБИВАЕМ INPUT
+        if (!attackLock)
+        {
+            horizontal = input;
+
+            if (Input.GetKeyDown(jumpKey))
+                jumpRequest = true;
+        }
+        else
+        {
+            horizontal = 0f;
+        }
+
+        if (canDash && Input.GetKeyDown(dashKey) &&
+            dashCooldownTimer <= 0f && !isDashing)
         {
             dashRequest = true;
         }
 
-        // --- ЛОГІКА КУЛДАУНУ ТА ПЛАВНОГО UI ---
-        if (dashCooldownTimer > 0f)
-        {
+        if (dashCooldownTimer > 0)
             dashCooldownTimer -= Time.deltaTime;
 
-            if (dashCooldownText != null)
-            {
-                dashCooldownText.text = $"{dashCooldownTimer:F1}s";
-            }
-        }
-        else
-        {
-            // Якщо кулдаун закінчився, а іконка ще видима — плавно її ховаємо
-            if (isDashUIVisible)
-            {
-                isDashUIVisible = false;
-                if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
-                fadeCoroutine = StartCoroutine(FadeDashUI(0f));
-            }
-        }
-
         HandleFlip();
+        UpdateAnimations(); //  ВОТ ЭТО ВАЖНО
     }
 
     void FixedUpdate()
@@ -162,11 +103,19 @@ public class PlayerMovement : MonoBehaviour
         if (isDashing) return;
 
         int mask = (groundLayer.value == 0) ? ~0 : groundLayer.value;
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, mask);
+
+        isGrounded = Physics2D.OverlapCircle(
+            groundCheck.position,
+            groundCheckRadius,
+            mask);
 
         if (isGrounded)
-        {
             doubleJumpAvailable = true;
+
+        if (PlayerAttack.IsAttacking)
+        {
+            rb.velocity = new Vector2(0f, rb.velocity.y);
+            return;
         }
 
         rb.velocity = new Vector2(horizontal * moveSpeed, rb.velocity.y);
@@ -175,139 +124,75 @@ public class PlayerMovement : MonoBehaviour
         {
             if (isGrounded)
             {
-                ExecuteJump(jumpForce);
+                rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             }
             else if (canDoubleJump && doubleJumpAvailable)
             {
-                ExecuteJump(doubleJumpForce);
+                rb.velocity = new Vector2(rb.velocity.x, doubleJumpForce);
                 doubleJumpAvailable = false;
-            }
-            else
-            {
-                if (debugDraw) Debug.Log($"{name}: попытка прыжка, но игрок не на земле и нет двойного прыжка.", this);
             }
 
             jumpRequest = false;
-        }
-
-        UpdateAnimations();
-    }
-
-    private void ExecuteJump(float force)
-    {
-        if (useVelocityJump)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, force);
-        }
-        else
-        {
-            rb.velocity = new Vector2(rb.velocity.x, 0f);
-            rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
-        }
-    }
-
-    private IEnumerator PerformDash()
-    {
-        isDashing = true;
-
-        if (animsController != null) animsController.SetDashing(true);
-
-        rb.gravityScale = 0f;
-        float dashDirection = facingRight ? 1f : -1f;
-        rb.velocity = new Vector2(dashDirection * dashSpeed, 0f);
-
-        yield return new WaitForSeconds(dashDuration);
-
-        rb.gravityScale = defaultGravity;
-        rb.velocity = new Vector2(0f, rb.velocity.y);
-
-        isDashing = false;
-        dashCooldownTimer = dashCooldown;
-
-        // НОВЕ: Запускаємо плавне з'явлення UI іконки
-        if (dashIconUI != null && !isDashUIVisible)
-        {
-            isDashUIVisible = true;
-            if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
-            fadeCoroutine = StartCoroutine(FadeDashUI(1f));
-        }
-
-        if (animsController != null) animsController.SetDashing(false);
-    }
-
-    // НОВЕ: Корутина для плавного з'явлення та зникнення
-    private IEnumerator FadeDashUI(float targetAlpha)
-    {
-        // Перед початком проявлення переконуємося, що об'єкт увімкнений
-        if (dashIconUI != null && !dashIconUI.activeSelf)
-        {
-            dashIconUI.SetActive(true);
-        }
-
-        float startAlpha = dashCanvasGroup.alpha;
-        float elapsed = 0f;
-
-        while (elapsed < dashUIFadeDuration)
-        {
-            elapsed += Time.deltaTime;
-            dashCanvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsed / dashUIFadeDuration);
-            yield return null;
-        }
-
-        // Гарантуємо ідеальне кінцеве значення
-        dashCanvasGroup.alpha = targetAlpha;
-
-        // Якщо ми повністю сховали іконку, вимикаємо об'єкт для економії ресурсів
-        if (targetAlpha == 0f && dashIconUI != null)
-        {
-            dashIconUI.SetActive(false);
         }
     }
 
     void HandleFlip()
     {
-        if (horizontal < -flipDeadzone && facingRight)
-        {
-            transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, 180f, transform.localEulerAngles.z);
-            facingRight = false;
-        }
-        else if (horizontal > flipDeadzone && !facingRight)
-        {
-            transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, 0f, transform.localEulerAngles.z);
-            facingRight = true;
-        }
+        if (lastMoveDirection > 0)
+            transform.localEulerAngles = new Vector3(0, 0, 0);
+        else if (lastMoveDirection < 0)
+            transform.localEulerAngles = new Vector3(0, 180, 0);
     }
 
     void UpdateAnimations()
     {
-        if (animsController == null) return;
-
-        bool moving = Mathf.Abs(horizontal) > animHorizontalDeadzone;
-        animsController.SetRunning(moving && isGrounded && !isDashing);
-
-        if (isGrounded && !isDashing)
+        if (PlayerAttack.IsAttacking)
         {
-            animsController.SetJumping(false);
-            animsController.SetFalling(false);
+            // во время атаки — НЕ трогаем анимацию движения
             return;
         }
 
-        float vy = rb.velocity.y;
+        AnimsController anims = GetComponentInChildren<AnimsController>();
+        if (anims == null) return;
 
-        if (vy > 0.05f && !isDashing)
+        bool moving = Mathf.Abs(horizontal) > 0.1f;
+
+        anims.SetRunning(moving && isGrounded);
+
+        if (!isGrounded)
         {
-            animsController.SetJumping(true);
-            animsController.SetFalling(false);
-        }
-        else if (vy < fallThreshold && !isDashing)
-        {
-            animsController.SetJumping(false);
-            animsController.SetFalling(true);
+            float vy = rb.velocity.y;
+
+            if (vy > 0.1f)
+            {
+                anims.SetJumping(true);
+                anims.SetFalling(false);
+            }
+            else
+            {
+                anims.SetJumping(false);
+                anims.SetFalling(true);
+            }
         }
         else
         {
-            animsController.SetJumping(false);
-            animsController.SetFalling(false);
+            anims.SetJumping(false);
+            anims.SetFalling(false);
         }
+    }
+
+    IEnumerator PerformDash()
+    {
+        isDashing = true;
+        rb.gravityScale = 0f;
+
+        float dir = lastMoveDirection;
+        rb.velocity = new Vector2(dir * dashSpeed, 0f);
+
+        yield return new WaitForSeconds(dashDuration);
+
+        rb.gravityScale = defaultGravity;
+        isDashing = false;
+        dashCooldownTimer = dashCooldown;
     }
 }
