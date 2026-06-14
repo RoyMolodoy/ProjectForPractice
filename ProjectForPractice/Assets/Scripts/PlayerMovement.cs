@@ -31,9 +31,10 @@ public class PlayerMovement : MonoBehaviour
     public float dashDuration = 0.2f;
     public float dashCooldown = 1f;
 
-    // НОВЕ: Посилання на саму іконку деша (може бути Image або пустий GameObject, який тримає іконку і текст)
+    [Header("Dash UI")]
     public GameObject dashIconUI;
     public TextMeshProUGUI dashCooldownText;
+    public float dashUIFadeDuration = 0.2f; // НОВЕ: Швидкість плавного з'явлення (в секундах)
 
     [Header("Debug")]
     public bool debugDraw = true;
@@ -57,11 +58,15 @@ public class PlayerMovement : MonoBehaviour
     // Змінні станів
     bool jumpRequest;
     bool doubleJumpAvailable;
-
     bool dashRequest;
     bool isDashing;
     float dashCooldownTimer;
     float defaultGravity;
+
+    // НОВЕ: Змінні для керування плавним UI
+    private CanvasGroup dashCanvasGroup;
+    private Coroutine fadeCoroutine;
+    private bool isDashUIVisible = false;
 
     void Awake()
     {
@@ -90,9 +95,17 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
-        // Ховаємо іконку при старті гри
+        // НОВЕ: Автоматично налаштовуємо CanvasGroup для плавності
         if (dashIconUI != null)
         {
+            dashCanvasGroup = dashIconUI.GetComponent<CanvasGroup>();
+            if (dashCanvasGroup == null)
+            {
+                dashCanvasGroup = dashIconUI.AddComponent<CanvasGroup>();
+            }
+
+            // Робимо іконку невидимою при старті
+            dashCanvasGroup.alpha = 0f;
             dashIconUI.SetActive(false);
         }
     }
@@ -113,12 +126,11 @@ public class PlayerMovement : MonoBehaviour
             dashRequest = true;
         }
 
-        // --- ЛОГІКА КУЛДАУНУ ТА UI ---
+        // --- ЛОГІКА КУЛДАУНУ ТА ПЛАВНОГО UI ---
         if (dashCooldownTimer > 0f)
         {
             dashCooldownTimer -= Time.deltaTime;
 
-            // Оновлюємо текст (тепер правильно звертаємось до .text)
             if (dashCooldownText != null)
             {
                 dashCooldownText.text = $"{dashCooldownTimer:F1}s";
@@ -126,10 +138,12 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            // Якщо кулдаун закінчився і іконка все ще увімкнена - вимикаємо її
-            if (dashIconUI != null && dashIconUI.activeSelf)
+            // Якщо кулдаун закінчився, а іконка ще видима — плавно її ховаємо
+            if (isDashUIVisible)
             {
-                dashIconUI.SetActive(false);
+                isDashUIVisible = false;
+                if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
+                fadeCoroutine = StartCoroutine(FadeDashUI(0f));
             }
         }
 
@@ -204,19 +218,50 @@ public class PlayerMovement : MonoBehaviour
 
         yield return new WaitForSeconds(dashDuration);
 
-        dashCooldownTimer = dashCooldown;
-
-        if (dashIconUI != null)
-        {
-            dashIconUI.SetActive(true);
-        }
-
         rb.gravityScale = defaultGravity;
         rb.velocity = new Vector2(0f, rb.velocity.y);
 
         isDashing = false;
+        dashCooldownTimer = dashCooldown;
+
+        // НОВЕ: Запускаємо плавне з'явлення UI іконки
+        if (dashIconUI != null && !isDashUIVisible)
+        {
+            isDashUIVisible = true;
+            if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
+            fadeCoroutine = StartCoroutine(FadeDashUI(1f));
+        }
 
         if (animsController != null) animsController.SetDashing(false);
+    }
+
+    // НОВЕ: Корутина для плавного з'явлення та зникнення
+    private IEnumerator FadeDashUI(float targetAlpha)
+    {
+        // Перед початком проявлення переконуємося, що об'єкт увімкнений
+        if (dashIconUI != null && !dashIconUI.activeSelf)
+        {
+            dashIconUI.SetActive(true);
+        }
+
+        float startAlpha = dashCanvasGroup.alpha;
+        float elapsed = 0f;
+
+        while (elapsed < dashUIFadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            dashCanvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsed / dashUIFadeDuration);
+            yield return null;
+        }
+
+        // Гарантуємо ідеальне кінцеве значення
+        dashCanvasGroup.alpha = targetAlpha;
+
+        // Якщо ми повністю сховали іконку, вимикаємо об'єкт для економії ресурсів
+        if (targetAlpha == 0f && dashIconUI != null)
+        {
+            dashIconUI.SetActive(false);
+        }
     }
 
     void HandleFlip()
