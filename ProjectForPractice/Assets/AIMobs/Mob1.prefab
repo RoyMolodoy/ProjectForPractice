@@ -206,6 +206,8 @@ MonoBehaviour:
   invulnerabilityDuration: 1.5
   numberOfFlashes: 6
   spriteRenderer: {fileID: 0}
+  hitFlashDuration: 0.2
+  hitFlashColor: {r: 0.8867924, g: 0.071110725, b: 0.071110725, a: 1}
 --- !u!114 &8392415247126606079
 MonoBehaviour:
   m_ObjectHideFlags: 0
