@@ -246,8 +246,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 247d53f6c0409714cb26cd7768195b7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 3
-  MaxHP: 3
+  HP: 30
+  MaxHP: 30
   defense: 1
   HPBar: {fileID: 0}
   invulnerabilityDuration: 1.5
