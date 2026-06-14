@@ -2274,6 +2274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuPanel: {fileID: 1041783895}
+  needToPause: 0
 --- !u!1 &758393302
 GameObject:
   m_ObjectHideFlags: 0
@@ -4447,6 +4448,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d32c6b72d650eb42a9ca803703adebf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentActivatedCheckpoints: []
   Health: {fileID: 0}
   Defence: {fileID: 0}
   Damage: {fileID: 0}
