@@ -99,9 +99,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55bc5094cde8c9d4da8d8eae4e86d507, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 1.6
-  damageDelay: 0.4
+  warningDuration: 1
+  strikeDuration: 0.2
   damage: 2
+  beamSprite: {fileID: 0}
+  warningColor: {r: 1, g: 0, b: 0, a: 0.4}
+  strikeColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!95 &757262748957066930
 Animator:
   serializedVersion: 5

@@ -44,7 +44,11 @@ public class HPSystem : MonoBehaviour
             if (HP <= 0)
             {
                 if (HP + minusHP > 0)
+                {
+                    gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
+                    gameObject.GetComponent<Collider2D>().enabled = false;
                     animsController.DeathAnim();
+                }
             }
             else
             {

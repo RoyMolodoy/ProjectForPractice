@@ -9,7 +9,6 @@ public class SaveManager : MonoBehaviour
 {
     public static SaveManager Instance;
     private string savePath;
-    public List<string> currentActivatedCheckpoints = new List<string>();
 
     public TextMeshProUGUI Health;
     public TextMeshProUGUI Defence;
@@ -70,7 +69,6 @@ public class SaveManager : MonoBehaviour
         data.damage = attack.attackDamage;
         data.canDash = movement.canDash;
         data.canDoubleJump = movement.canDoubleJump;
-        data.activatedCheckpoints = new List<string>(currentActivatedCheckpoints);
 
         string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(savePath, json);
@@ -102,9 +100,6 @@ public class SaveManager : MonoBehaviour
         attack.attackDamage = data.damage;
         movement.canDash = data.canDash;
         movement.canDoubleJump = data.canDoubleJump;
-
-        if (data.activatedCheckpoints != null)
-            currentActivatedCheckpoints = new List<string>(data.activatedCheckpoints);
 
         if (Health != null && Defence != null && Damage != null)
         {
@@ -176,17 +171,5 @@ public class SaveManager : MonoBehaviour
         {
             Debug.Log("«бережень ≥ так немаЇ.");
         }
-    }
-    public void MarkCheckpointAsActivated(string checkpointID)
-    {
-        if (!currentActivatedCheckpoints.Contains(checkpointID))
-        {
-            currentActivatedCheckpoints.Add(checkpointID);
-        }
-    }
-
-    public bool IsCheckpointActivated(string checkpointID)
-    {
-        return currentActivatedCheckpoints.Contains(checkpointID);
     }
 }

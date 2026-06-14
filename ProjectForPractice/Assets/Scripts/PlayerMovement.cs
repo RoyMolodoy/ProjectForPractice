@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using TMPro;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour
@@ -8,12 +9,11 @@ public class PlayerMovement : MonoBehaviour
     public bool canDoubleJump = false;
     public bool canDash = false;
 
-    // НОВИЙ БЛОК: Кнопки управління, які ми будемо міняти з налаштувань
     [Header("Controls")]
     public KeyCode leftKey = KeyCode.A;
     public KeyCode rightKey = KeyCode.D;
     public KeyCode jumpKey = KeyCode.Space;
-    public KeyCode dashKey = KeyCode.LeftShift; // Переніс сюди для зручності
+    public KeyCode dashKey = KeyCode.LeftShift;
 
     [Header("Movement")]
     public float moveSpeed = 8f;
@@ -30,6 +30,10 @@ public class PlayerMovement : MonoBehaviour
     public float dashSpeed = 20f;
     public float dashDuration = 0.2f;
     public float dashCooldown = 1f;
+
+    // НОВЕ: Посилання на саму іконку деша (може бути Image або пустий GameObject, який тримає іконку і текст)
+    public GameObject dashIconUI;
+    public TextMeshProUGUI dashCooldownText;
 
     [Header("Debug")]
     public bool debugDraw = true;
@@ -73,10 +77,10 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (rb.bodyType != RigidbodyType2D.Dynamic)
-            Debug.LogWarning($"{name}: Rigidbody2D должен быть Dynamic для прыжка (текущий тип: {rb.bodyType}).", this);
+            Debug.LogWarning($"{name}: Rigidbody2D должен быть Dynamic для прыжка.", this);
 
         if (groundLayer.value == 0)
-            Debug.LogWarning($"{name}: LayerMask groundLayer не задан. Установите слой(и) земли или задайте маску.", this);
+            Debug.LogWarning($"{name}: LayerMask groundLayer не задан.", this);
 
         if (animsController == null)
             animsController = GetComponentInChildren<AnimsController>();
@@ -84,30 +88,49 @@ public class PlayerMovement : MonoBehaviour
         facingRight = Mathf.Approximately(transform.localEulerAngles.y, 0f);
     }
 
+    void Start()
+    {
+        // Ховаємо іконку при старті гри
+        if (dashIconUI != null)
+        {
+            dashIconUI.SetActive(false);
+        }
+    }
+
     void Update()
     {
         if (isDashing) return;
 
-        // --- ЗМІНЕНА ЛОГІКА ЧИТАННЯ КНОПОК ---
-
-        // Визначаємо напрямок руху на основі наших KeyCode (імітуємо GetAxisRaw)
         horizontal = 0f;
         if (Input.GetKey(rightKey)) horizontal += 1f;
         if (Input.GetKey(leftKey)) horizontal -= 1f;
 
-        // Перевіряємо нашу кнопку стрибка
         if (Input.GetKeyDown(jumpKey))
             jumpRequest = true;
 
-        // Логіка запиту на деш (dashKey тепер у блоці Controls)
         if (canDash && Input.GetKeyDown(dashKey) && dashCooldownTimer <= 0f && !isDashing)
         {
             dashRequest = true;
         }
 
+        // --- ЛОГІКА КУЛДАУНУ ТА UI ---
         if (dashCooldownTimer > 0f)
         {
             dashCooldownTimer -= Time.deltaTime;
+
+            // Оновлюємо текст (тепер правильно звертаємось до .text)
+            if (dashCooldownText != null)
+            {
+                dashCooldownText.text = $"{dashCooldownTimer:F1}s";
+            }
+        }
+        else
+        {
+            // Якщо кулдаун закінчився і іконка все ще увімкнена - вимикаємо її
+            if (dashIconUI != null && dashIconUI.activeSelf)
+            {
+                dashIconUI.SetActive(false);
+            }
         }
 
         HandleFlip();
@@ -181,11 +204,17 @@ public class PlayerMovement : MonoBehaviour
 
         yield return new WaitForSeconds(dashDuration);
 
+        dashCooldownTimer = dashCooldown;
+
+        if (dashIconUI != null)
+        {
+            dashIconUI.SetActive(true);
+        }
+
         rb.gravityScale = defaultGravity;
         rb.velocity = new Vector2(0f, rb.velocity.y);
 
         isDashing = false;
-        dashCooldownTimer = dashCooldown;
 
         if (animsController != null) animsController.SetDashing(false);
     }

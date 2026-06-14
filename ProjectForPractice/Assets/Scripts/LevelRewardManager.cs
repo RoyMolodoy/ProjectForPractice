@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System; // Обов'язково додаємо для Action
 
 public class LevelRewardManager : MonoBehaviour
 {
@@ -32,19 +33,32 @@ public class LevelRewardManager : MonoBehaviour
     private List<SkillData> currentChoices;
     private CanvasGroup canvasGroup; // Компонент для керування прозорістю
 
+    // Словник, який зберігає зв'язок між типом скіла і відповідною функцією
+    private Dictionary<SkillType, Action<GameObject, SkillData>> skillFunctions;
+
     private void Awake()
     {
         if (Instance == null)
             Instance = this;
         else
             Destroy(gameObject);
+
+        // Реєструємо наші функції у словнику при старті
+        skillFunctions = new Dictionary<SkillType, Action<GameObject, SkillData>>
+        {
+            { SkillType.HealFull, ApplyHealFull },
+            { SkillType.MaxHPUp, ApplyMaxHPUp },
+            { SkillType.DefenseUp, ApplyDefenseUp },
+            { SkillType.DamageUp, ApplyDamageUp },
+            { SkillType.DashUnlock, ApplyDashUnlock },
+            { SkillType.DoubleJumpUnlock, ApplyDoubleJumpUnlock }
+        };
     }
 
     private void Start()
     {
         if (rewardPanel != null)
         {
-            // Автоматично шукаємо або додаємо CanvasGroup на панель
             canvasGroup = rewardPanel.GetComponent<CanvasGroup>();
             if (canvasGroup == null)
             {
@@ -59,7 +73,6 @@ public class LevelRewardManager : MonoBehaviour
     {
         if (rewardPanel == null) return;
 
-        // Генеруємо списки...
         currentChoices = new List<SkillData>();
         List<SkillData> tempCommon = new List<SkillData>(commonSkills);
         List<SkillData> tempLegendary = new List<SkillData>(legendarySkills);
@@ -68,16 +81,16 @@ public class LevelRewardManager : MonoBehaviour
         {
             SkillData pickedSkill = null;
 
-            int roll = Random.Range(0, 100);
+            int roll = UnityEngine.Random.Range(0, 100);
             if (roll < legendaryChance && tempLegendary.Count > 0)
             {
-                int r = Random.Range(0, tempLegendary.Count);
+                int r = UnityEngine.Random.Range(0, tempLegendary.Count);
                 pickedSkill = tempLegendary[r];
                 tempLegendary.RemoveAt(r);
             }
             else if (tempCommon.Count > 0)
             {
-                int r = Random.Range(0, tempCommon.Count);
+                int r = UnityEngine.Random.Range(0, tempCommon.Count);
                 pickedSkill = tempCommon[r];
                 tempCommon.RemoveAt(r);
             }
@@ -100,7 +113,6 @@ public class LevelRewardManager : MonoBehaviour
             }
         }
 
-        // Вмикаємо панель, зупиняємо час і запускаємо анімацію
         rewardPanel.SetActive(true);
         Time.timeScale = 0f;
         StartCoroutine(FadeInPanel());
@@ -108,7 +120,6 @@ public class LevelRewardManager : MonoBehaviour
 
     public void ChooseSkill(int index)
     {
-        // Блокуємо кнопки, щоб гравець не міг клікнути двічі під час зникнення
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = false;
 
@@ -120,15 +131,11 @@ public class LevelRewardManager : MonoBehaviour
             legendarySkills.Remove(chosenSkill);
         }
 
-        // Запускаємо плавне зникнення
         StartCoroutine(FadeOutPanel());
     }
 
-    // --- КОРУТИНИ ДЛЯ ПЛАВНОСТІ ---
-
     private IEnumerator FadeInPanel()
     {
-        // Робимо панель повністю прозорою і трохи меншою
         canvasGroup.alpha = 0f;
         rewardPanel.transform.localScale = new Vector3(0.8f, 0.8f, 1f);
 
@@ -139,19 +146,16 @@ public class LevelRewardManager : MonoBehaviour
 
         while (elapsed < fadeDuration)
         {
-            // Використовуємо unscaledDeltaTime, бо звичайний час зупинено!
             elapsed += Time.unscaledDeltaTime;
             float t = elapsed / fadeDuration;
 
-            // Плавно збільшуємо прозорість та масштаб
             canvasGroup.alpha = Mathf.Lerp(0f, 1f, t);
             float scale = Mathf.Lerp(0.8f, 1f, t);
             rewardPanel.transform.localScale = new Vector3(scale, scale, 1f);
 
-            yield return null; // Чекаємо наступного кадру
+            yield return null;
         }
 
-        // Гарантуємо, що в кінці значення ідеальні
         canvasGroup.alpha = 1f;
         rewardPanel.transform.localScale = Vector3.one;
     }
@@ -165,7 +169,6 @@ public class LevelRewardManager : MonoBehaviour
             elapsed += Time.unscaledDeltaTime;
             float t = elapsed / fadeDuration;
 
-            // Плавно зменшуємо прозорість та масштаб назад
             canvasGroup.alpha = Mathf.Lerp(1f, 0f, t);
             float scale = Mathf.Lerp(1f, 0.8f, t);
             rewardPanel.transform.localScale = new Vector3(scale, scale, 1f);
@@ -173,12 +176,11 @@ public class LevelRewardManager : MonoBehaviour
             yield return null;
         }
 
-        // Коли анімація закінчилась — ховаємо панель і ВІДНОВЛЮЄМО ЧАС
         rewardPanel.SetActive(false);
         Time.timeScale = 1f;
     }
 
-    // --- ТУТ ЗАСТОСОВУЮТЬСЯ ЕФЕКТИ ---
+    // --- ОНОВЛЕНИЙ МЕТОД ЗАСТОСУВАННЯ ЕФЕКТУ ---
     private void ApplySkillEffect(SkillData skill)
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -188,56 +190,72 @@ public class LevelRewardManager : MonoBehaviour
             return;
         }
 
-        switch (skill.type)
+        // Шукаємо функцію у словнику і відразу виконуємо її
+        if (skillFunctions.ContainsKey(skill.type))
         {
-            case SkillType.HealFull:
-                var hpSystemFull = player.GetComponent<HPSystem>();
-                if (hpSystemFull != null) hpSystemFull.PlusHP(999);
-                break;
-
-            case SkillType.MaxHPUp:
-                var hpSystemMax = player.GetComponent<HPSystem>();
-                if (hpSystemMax != null)
-                {
-                    hpSystemMax.MaxHP += skill.value;
-                    hpSystemMax.HP += skill.value;
-                    Health.text = $"{hpSystemMax.MaxHP}";
-
-                    if (hpSystemMax.HPBar != null)
-                        hpSystemMax.HPBar.fillAmount = (float)hpSystemMax.HP / hpSystemMax.MaxHP;
-                }
-                break;
-
-            case SkillType.DefenseUp:
-                var hpSysDef = player.GetComponent<HPSystem>();
-                if (hpSysDef != null)
-                {
-                    hpSysDef.defense += skill.value;
-                    Defence.text = $"{hpSysDef.defense}";
-                }
-                break;
-
-            case SkillType.DamageUp:
-                var attackScript = player.GetComponent<PlayerAttack>();
-                Damage.text = $"{attackScript.attackDamage}";
-                if (attackScript != null)
-                {
-                    attackScript.attackDamage += (int)skill.value;
-                    Damage.text = $"{attackScript.attackDamage}";
-                }
-                break;
-
-            case SkillType.DashUnlock:
-                var moveScriptDash = player.GetComponent<PlayerMovement>();
-                if (moveScriptDash != null) moveScriptDash.canDash = true;
-                break;
-
-            case SkillType.DoubleJumpUnlock:
-                var moveScriptJump = player.GetComponent<PlayerMovement>();
-                if (moveScriptJump != null) moveScriptJump.canDoubleJump = true;
-                break;
+            skillFunctions[skill.type].Invoke(player, skill);
+        }
+        else
+        {
+            Debug.LogWarning($"Для скіла {skill.type} ще не створено функції!");
         }
 
         Debug.Log($"<color=green>Вибрано скіл:</color> {skill.skillName}");
+    }
+
+    // =========================================================
+    // --- ОКРЕМІ ФУНКЦІЇ ДЛЯ КОЖНОГО СКІЛА ---
+    // =========================================================
+
+    private void ApplyHealFull(GameObject player, SkillData skill)
+    {
+        var hpSystemFull = player.GetComponent<HPSystem>();
+        if (hpSystemFull != null) hpSystemFull.PlusHP(999);
+    }
+
+    private void ApplyMaxHPUp(GameObject player, SkillData skill)
+    {
+        var hpSystemMax = player.GetComponent<HPSystem>();
+        if (hpSystemMax != null)
+        {
+            hpSystemMax.MaxHP += skill.value;
+            hpSystemMax.HP += skill.value;
+            Health.text = $"{hpSystemMax.MaxHP}";
+
+            if (hpSystemMax.HPBar != null)
+                hpSystemMax.HPBar.fillAmount = (float)hpSystemMax.HP / hpSystemMax.MaxHP;
+        }
+    }
+
+    private void ApplyDefenseUp(GameObject player, SkillData skill)
+    {
+        var hpSysDef = player.GetComponent<HPSystem>();
+        if (hpSysDef != null)
+        {
+            hpSysDef.defense += skill.value;
+            Defence.text = $"{hpSysDef.defense}";
+        }
+    }
+
+    private void ApplyDamageUp(GameObject player, SkillData skill)
+    {
+        var attackScript = player.GetComponent<PlayerAttack>();
+        if (attackScript != null)
+        {
+            attackScript.attackDamage += (int)skill.value;
+            Damage.text = $"{attackScript.attackDamage}";
+        }
+    }
+
+    private void ApplyDashUnlock(GameObject player, SkillData skill)
+    {
+        var moveScriptDash = player.GetComponent<PlayerMovement>();
+        if (moveScriptDash != null) moveScriptDash.canDash = true;
+    }
+
+    private void ApplyDoubleJumpUnlock(GameObject player, SkillData skill)
+    {
+        var moveScriptJump = player.GetComponent<PlayerMovement>();
+        if (moveScriptJump != null) moveScriptJump.canDoubleJump = true;
     }
 }

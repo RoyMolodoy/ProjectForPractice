@@ -7,20 +7,23 @@ public class BossAI : MonoBehaviour
     [SerializeField] private string playerTag = "Player";
     private Transform _player;
 
+    [Header("Зір Боса")]
+    [SerializeField] private float visionRange = 15f; // Радіус, в якому бос активується
+
     [Header("Загальні налаштування")]
-    [SerializeField] private float attackCooldown = 3.5f; // Пауза між атаками
-    [SerializeField] private Transform staffTip; // Точка на кінці посоху (для спавну голови)
+    [SerializeField] private float attackCooldown = 3.5f;
+    [SerializeField] private Transform staffTip;
 
     [Header("Атака 1: Промінь зверху")]
     [SerializeField] private GameObject beamPrefab;
-    [SerializeField] private float beamSpawnHeight = 7f; // На якій висоті над гравцем спавнити промінь
+    [SerializeField] private float beamSpawnHeight = 7f;
 
     [Header("Атака 2: Летюча Голова")]
     [SerializeField] private GameObject flyingHeadPrefab;
 
     [Header("Компоненти")]
     [SerializeField] public HPSystem HP;
-    // [SerializeField] private AnimsController animsController; // Розкоментуй, якщо додаси анімації босу
+    private Animator _anim;
 
     private float _lastAttackTime;
     private bool _isAttacking = false;
@@ -29,6 +32,7 @@ public class BossAI : MonoBehaviour
     private void Awake()
     {
         if (HP == null) HP = GetComponent<HPSystem>();
+        _anim = GetComponent<Animator>();
     }
 
     private void Start()
@@ -39,24 +43,27 @@ public class BossAI : MonoBehaviour
             _player = playerObj.transform;
         }
 
-        // Робимо невеличку затримку перед першою атакою на початку бою
         _lastAttackTime = Time.time - 1f;
     }
 
     private void Update()
     {
-        if (_player == null) return;
+        if (_player == null || _isAttacking) return;
 
-        // Повертатися до гравця босс повинен завжди, крім моменту, коли він уже щось чаклує
-        if (!_isAttacking)
+        // Вираховуємо дистанцію від боса до гравця
+        float distanceToPlayer = Vector2.Distance(transform.position, _player.position);
+
+        // Якщо гравець зайшов у зону бачення боса
+        if (distanceToPlayer <= visionRange)
         {
+            // 1. Бос розвертається і постійно дивиться на гравця
             HandleFlip();
-        }
 
-        // Автоматичний вибір атаки за таймером
-        if (!_isAttacking && Time.time - _lastAttackTime >= attackCooldown)
-        {
-            ChooseRandomAttack();
+            // 2. Якщо таймер відкату пройшов - бос атакує
+            if (Time.time - _lastAttackTime >= attackCooldown)
+            {
+                ChooseRandomAttack();
+            }
         }
     }
 
@@ -79,8 +86,6 @@ public class BossAI : MonoBehaviour
     private void ChooseRandomAttack()
     {
         _lastAttackTime = Time.time;
-
-        // Випадково обираємо 0 або 1
         int attackIndex = Random.Range(0, 2);
 
         if (attackIndex == 0)
@@ -93,50 +98,50 @@ public class BossAI : MonoBehaviour
         }
     }
 
-    // --- ЛОГІКА АТАК И 1: ПРОМІНЬ ЗВЕРХУ ---
+    // --- ЛОГІКА АТАКИ 1: ПРОМІНЬ ЗВЕРХУ ---
     private IEnumerator SkyBeamAttackCoroutine()
     {
         _isAttacking = true;
+        if (_anim != null) _anim.SetBool("BeamAttack", true);
 
-        // Тут можна запустити тригер анімації підняття посоху:
-        // animsController?.SetTrigger("LiftStaff");
-
-        yield return new WaitForSeconds(0.6f); // Час на замах/анімацію
+        yield return new WaitForSeconds(0.6f);
 
         if (_player != null)
         {
-            // Визначаємо точку прямо НАД гравцем на заданій висоті
             Vector2 spawnPos = new Vector2(_player.position.x, _player.position.y + beamSpawnHeight);
             Instantiate(beamPrefab, spawnPos, Quaternion.identity);
         }
 
-        yield return new WaitForSeconds(1f); // Пауза після касту, щоб бос не одразу повернувся до звичайного стану
+        if (_anim != null) _anim.SetBool("BeamAttack", false);
         _isAttacking = false;
     }
 
-    // --- ЛОГІКА АТАК И 2: ЛЕТЮЧА ГОЛОВА ---
+    // --- ЛОГІКА АТАКИ 2: ЛЕТЮЧА ГОЛОВА ---
     private IEnumerator FlyingHeadAttackCoroutine()
     {
         _isAttacking = true;
+        if (_anim != null) _anim.SetBool("HeadAttack", true);
 
-        // Тут можна запустити тригер анімації виклику голови:
-        // animsController?.SetTrigger("CastHead");
+        yield return new WaitForSeconds(1f);
 
-        yield return new WaitForSeconds(0.5f);
-
-        // Визначаємо точку спавну (якщо немає staffTip, спавнимо в центрі боса)
         Vector3 spawnPos = staffTip != null ? staffTip.position : transform.position;
-
         GameObject headObj = Instantiate(flyingHeadPrefab, spawnPos, Quaternion.identity);
 
-        // Передаємо створеній голові посилання на гравця, щоб вона знала за чим летіти
         FlyingHead headScript = headObj.GetComponent<FlyingHead>();
         if (headScript != null)
         {
             headScript.SetTarget(_player);
         }
 
-        yield return new WaitForSeconds(0.8f);
+        if (_anim != null) _anim.SetBool("HeadAttack", false);
         _isAttacking = false;
+    }
+
+    // --- ВІЗУАЛІЗАЦІЯ ЗОРУ В UNITY ---
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.cyan;
+        // Малює блакитне коло навколо боса, щоб ти бачив, де починається його зона агро
+        Gizmos.DrawWireSphere(transform.position, visionRange);
     }
 }
