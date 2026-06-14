@@ -85,19 +85,13 @@ public class ProceduralLevelGenerator : MonoBehaviour
 
     private void SpawnSection(Section prefab)
     {
-        Section section = Instantiate(
-            prefab,
-            Vector3.zero,
-            Quaternion.identity);
+        Section section = Instantiate(prefab, Vector3.zero, Quaternion.identity);
 
         // Совмещаем EnterPoint новой секции
         // с ExitPoint предыдущей
-        Vector3 offset =
-            section.transform.position -
-            section.enterPoint.position;
+        Vector3 offset = section.transform.position - section.enterPoint.position;
 
-        section.transform.position =
-            currentExit.position + offset;
+        section.transform.position = currentExit.position + offset;
 
         currentExit = section.exitPoint;
     }
