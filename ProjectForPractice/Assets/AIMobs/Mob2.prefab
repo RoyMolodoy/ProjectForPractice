@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 7867915651737764470}
   - component: {fileID: 7867915651737764471}
   - component: {fileID: 7867915651737764464}
+  - component: {fileID: -1758792777196134964}
   m_Layer: 7
   m_Name: Mob2
   m_TagString: Enemy
@@ -228,6 +229,19 @@ MonoBehaviour:
   isPlayerAttacking1: isPlayerAttacking1
   isPlayerAttacking2: isPlayerAttacking2
   debugLogs: 0
+--- !u!114 &-1758792777196134964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7867915651737764465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 002354aafd522d04b8888405723ef3e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectID: 
 --- !u!1 &7867915651922234393
 GameObject:
   m_ObjectHideFlags: 0

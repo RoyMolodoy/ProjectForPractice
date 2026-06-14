@@ -199,9 +199,9 @@ public class LevelRewardManager : MonoBehaviour
                 var hpSystemMax = player.GetComponent<HPSystem>();
                 if (hpSystemMax != null)
                 {
-                    Health.text = $"{hpSystemMax.MaxHP + skill.value}";
                     hpSystemMax.MaxHP += skill.value;
                     hpSystemMax.HP += skill.value;
+                    Health.text = $"{hpSystemMax.MaxHP}";
 
                     if (hpSystemMax.HPBar != null)
                         hpSystemMax.HPBar.fillAmount = (float)hpSystemMax.HP / hpSystemMax.MaxHP;
@@ -210,14 +210,21 @@ public class LevelRewardManager : MonoBehaviour
 
             case SkillType.DefenseUp:
                 var hpSysDef = player.GetComponent<HPSystem>();
-                Defence.text = $"{hpSysDef.defense + skill.value}";
-                if (hpSysDef != null) hpSysDef.defense += skill.value;
+                if (hpSysDef != null)
+                {
+                    hpSysDef.defense += skill.value;
+                    Defence.text = $"{hpSysDef.defense}";
+                }
                 break;
 
             case SkillType.DamageUp:
                 var attackScript = player.GetComponent<PlayerAttack>();
-                Damage.text = $"{attackScript.attackDamage + (int)skill.value}";
-                if (attackScript != null) attackScript.attackDamage += (int)skill.value;
+                Damage.text = $"{attackScript.attackDamage}";
+                if (attackScript != null)
+                {
+                    attackScript.attackDamage += (int)skill.value;
+                    Damage.text = $"{attackScript.attackDamage}";
+                }
                 break;
 
             case SkillType.DashUnlock:

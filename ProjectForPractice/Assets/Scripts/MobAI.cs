@@ -265,9 +265,6 @@ public class MobAI : MonoBehaviour
         if (HP == null) return;
 
         HP.HP -= damageAmount;
-
-        if (HP.HP <= 0)
-            this.enabled = false;
     }
 
     private void HandleFlip()

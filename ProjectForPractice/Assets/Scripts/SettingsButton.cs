@@ -3,6 +3,7 @@ using UnityEngine;
 public class SettingsButton : MonoBehaviour
 {
     public GameObject menuPanel;
+    public bool needToPause = true;
 
     public void ToggleMenu()
     {
@@ -12,7 +13,8 @@ public class SettingsButton : MonoBehaviour
 
             if (!currentState)
             {
-                Time.timeScale = 0f;
+                if (needToPause)
+                    Time.timeScale = 0f;
                 menuPanel.SetActive(true);
             }
             else
