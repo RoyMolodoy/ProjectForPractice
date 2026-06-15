@@ -189,6 +189,7 @@ public class MobAI : MonoBehaviour
         FacePlayerInstant();
 
         _lastAttackTime = Time.time;
+        audioSource.PlayOneShot(attackSound);
         StartCoroutine(AttackRoutine());
     }
 
