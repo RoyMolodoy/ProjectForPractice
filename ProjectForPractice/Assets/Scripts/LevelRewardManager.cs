@@ -35,7 +35,6 @@ public class LevelRewardManager : MonoBehaviour
 
     private List<SkillData> currentChoices;
 
-    // Два окремі CanvasGroup для кожної панелі
     private CanvasGroup rewardCanvasGroup;
     private CanvasGroup endCanvasGroup;
 
@@ -61,7 +60,6 @@ public class LevelRewardManager : MonoBehaviour
 
     private void Start()
     {
-        // Налаштовуємо панель нагород
         if (rewardPanel != null)
         {
             rewardCanvasGroup = rewardPanel.GetComponent<CanvasGroup>();
@@ -72,7 +70,6 @@ public class LevelRewardManager : MonoBehaviour
             rewardPanel.SetActive(false);
         }
 
-        // Налаштовуємо фінальну панель
         if (endPanel != null)
         {
             endCanvasGroup = endPanel.GetComponent<CanvasGroup>();
@@ -80,7 +77,7 @@ public class LevelRewardManager : MonoBehaviour
             {
                 endCanvasGroup = endPanel.AddComponent<CanvasGroup>();
             }
-            endCanvasGroup.alpha = 0f; // Робимо прозорою на старті
+            endCanvasGroup.alpha = 0f;
             endPanel.SetActive(false);
         }
     }
@@ -92,20 +89,47 @@ public class LevelRewardManager : MonoBehaviour
         TogglePlayerScripts(false);
         isPanelActive = true;
 
-        currentChoices = new List<SkillData>();
-        List<SkillData> tempCommon = new List<SkillData>(commonSkills);
-        List<SkillData> tempLegendary = new List<SkillData>(legendarySkills);
+        // 1. Знаходимо гравця, щоб перевірити його поточні навички
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        PlayerMovement playerMovement = playerObj != null ? playerObj.GetComponent<PlayerMovement>() : null;
 
+        currentChoices = new List<SkillData>();
+
+        // 2. Фільтруємо списки: додаємо тільки ті скіли, яких у гравця ЩЕ НЕМАЄ
+        List<SkillData> tempCommon = new List<SkillData>();
+        foreach (var skill in commonSkills)
+        {
+            if (!IsSkillAlreadyUnlocked(skill, playerMovement))
+            {
+                tempCommon.Add(skill);
+            }
+        }
+
+        List<SkillData> tempLegendary = new List<SkillData>();
+        foreach (var skill in legendarySkills)
+        {
+            if (!IsSkillAlreadyUnlocked(skill, playerMovement))
+            {
+                tempLegendary.Add(skill);
+            }
+        }
+
+        // 3. Генеруємо 3 картки з уже відфільтрованих списків
         for (int i = 0; i < 3; i++)
         {
             SkillData pickedSkill = null;
 
             int roll = UnityEngine.Random.Range(0, 100);
+
             if (roll < legendaryChance && tempLegendary.Count > 0)
             {
                 int r = UnityEngine.Random.Range(0, tempLegendary.Count);
                 pickedSkill = tempLegendary[r];
                 tempLegendary.RemoveAt(r);
+
+                // Ми залишаємо це тут для інших легендарок (наприклад, +50 ХП),
+                // щоб вони не випадали двічі за один забіг.
+                legendarySkills.Remove(pickedSkill);
             }
             else if (tempCommon.Count > 0)
             {
@@ -137,6 +161,24 @@ public class LevelRewardManager : MonoBehaviour
         StartCoroutine(FadeInPanel());
     }
 
+    // 🔥 НОВИЙ МЕТОД-ФІЛЬТР
+    private bool IsSkillAlreadyUnlocked(SkillData skill, PlayerMovement pm)
+    {
+        if (pm == null) return false;
+
+        // Перевіряємо, чи цей скіл уже відкритий у гравця
+        if (skill.type == SkillType.DashUnlock && pm.canDash)
+            return true;
+
+        if (skill.type == SkillType.DoubleJumpUnlock && pm.canDoubleJump)
+            return true;
+
+        // Якщо в майбутньому додаш інші унікальні навички (наприклад, canBlock),
+        // просто додай перевірку сюди!
+
+        return false;
+    }
+
     public void ChooseSkill(int index)
     {
         rewardCanvasGroup.interactable = false;
@@ -145,18 +187,12 @@ public class LevelRewardManager : MonoBehaviour
         SkillData chosenSkill = currentChoices[index];
         ApplySkillEffect(chosenSkill);
 
-        if (chosenSkill.rarity == SkillRarity.Legendary)
-        {
-            legendarySkills.Remove(chosenSkill);
-        }
-
         StartCoroutine(FadeOutPanel());
     }
 
     private IEnumerator FadeInPanel()
     {
         rewardCanvasGroup.alpha = 0f;
-
         rewardCanvasGroup.interactable = true;
         rewardCanvasGroup.blocksRaycasts = true;
 
@@ -165,7 +201,6 @@ public class LevelRewardManager : MonoBehaviour
         while (elapsed < fadeDuration)
         {
             elapsed += Time.unscaledDeltaTime;
-            // Змінюємо ТІЛЬКИ прозорість, масштаб не чіпаємо
             rewardCanvasGroup.alpha = Mathf.Lerp(0f, 1f, elapsed / fadeDuration);
             yield return null;
         }
@@ -177,7 +212,6 @@ public class LevelRewardManager : MonoBehaviour
     {
         float elapsed = 0f;
 
-        // 1. Плавно ховаємо панель нагород (тільки прозорість)
         while (elapsed < fadeDuration)
         {
             elapsed += Time.unscaledDeltaTime;
@@ -187,7 +221,6 @@ public class LevelRewardManager : MonoBehaviour
 
         rewardPanel.SetActive(false);
 
-        // 2. Плавно проявляємо фінальну панель (endPanel)
         if (endPanel != null)
         {
             endPanel.SetActive(true);
@@ -196,12 +229,11 @@ public class LevelRewardManager : MonoBehaviour
 
             endCanvasGroup.alpha = 0f;
 
-            elapsed = 0f; // Скидаємо таймер для нової анімації
+            elapsed = 0f;
 
             while (elapsed < fadeDuration)
             {
                 elapsed += Time.unscaledDeltaTime;
-                // Змінюємо ТІЛЬКИ прозорість
                 endCanvasGroup.alpha = Mathf.Lerp(0f, 1f, elapsed / fadeDuration);
                 yield return null;
             }
@@ -230,22 +262,12 @@ public class LevelRewardManager : MonoBehaviour
     private void ApplySkillEffect(SkillData skill)
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player == null)
-        {
-            Debug.LogError("Гравець не знайдений! Перевір тег 'Player'.");
-            return;
-        }
+        if (player == null) return;
 
         if (skillFunctions.ContainsKey(skill.type))
         {
             skillFunctions[skill.type].Invoke(player, skill);
         }
-        else
-        {
-            Debug.LogWarning($"Для скіла {skill.type} ще не створено функції!");
-        }
-
-        Debug.Log($"<color=green>Вибрано скіл:</color> {skill.skillName}");
     }
 
     // =========================================================
@@ -265,7 +287,7 @@ public class LevelRewardManager : MonoBehaviour
         {
             hpSystemMax.MaxHP += skill.value;
             hpSystemMax.HP += skill.value;
-            Health.text = $"{hpSystemMax.MaxHP}";
+            if (Health != null) Health.text = $"{hpSystemMax.MaxHP}";
 
             if (hpSystemMax.HPBar != null)
                 hpSystemMax.HPBar.fillAmount = (float)hpSystemMax.HP / hpSystemMax.MaxHP;
@@ -278,7 +300,7 @@ public class LevelRewardManager : MonoBehaviour
         if (hpSysDef != null)
         {
             hpSysDef.defense += skill.value;
-            Defence.text = $"{hpSysDef.defense}";
+            if (Defence != null) Defence.text = $"{hpSysDef.defense}";
         }
     }
 
@@ -288,7 +310,7 @@ public class LevelRewardManager : MonoBehaviour
         if (attackScript != null)
         {
             attackScript.attackDamage += (int)skill.value;
-            Damage.text = $"{attackScript.attackDamage}";
+            if (Damage != null) Damage.text = $"{attackScript.attackDamage}";
         }
     }
 

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Dash
   m_EditorClassIdentifier: 
   skillName: Wind fast
-  description: Gain dash "by clicking button F"
+  description: Gain dash
   skillIcon: {fileID: 0}
   type: 4
   rarity: 1
