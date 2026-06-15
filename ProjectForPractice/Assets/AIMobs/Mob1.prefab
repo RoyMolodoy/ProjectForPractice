@@ -240,8 +240,8 @@ MonoBehaviour:
   invulnerabilityDuration: 1.5
   numberOfFlashes: 6
   spriteRenderer: {fileID: 0}
-  aSourse: {fileID: 0}
-  damageSound: {fileID: 0}
+  aSourse: {fileID: 1800844606}
+  damageSound: {fileID: 8300000, guid: 419d7dbf0158ff441aff4254f36bbf5c, type: 3}
   deathSound: {fileID: 8300000, guid: f50566d01d7da6a43a767ad446a73fc6, type: 3}
   damageVolume: 0.1
 --- !u!114 &3376067504174254005
@@ -279,7 +279,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.229
+  m_Volume: 0.314
   m_Pitch: 1.39
   Loop: 0
   Mute: 0
