@@ -5998,7 +5998,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4664288996854076331, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
       propertyPath: legendaryChance
-      value: 100
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 5348837054054987054, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
       propertyPath: levelSystem
