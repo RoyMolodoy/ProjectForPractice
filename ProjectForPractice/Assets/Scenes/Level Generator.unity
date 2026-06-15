@@ -134,6 +134,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &298971270 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1643201469402995151, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
+  m_PrefabInstance: {fileID: 1182392039}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &359099710
 GameObject:
   m_ObjectHideFlags: 0
@@ -802,9 +813,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1689743682417654556, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
+      propertyPath: dashIconUI
+      value: 
+      objectReference: {fileID: 2002482832}
+    - target: {fileID: 1689743682417654556, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
       propertyPath: canDoubleJump
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1689743682417654556, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
+      propertyPath: dashCooldownText
+      value: 
+      objectReference: {fileID: 298971270}
     - target: {fileID: 1689743682417654556, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
       propertyPath: groundLayer.m_Bits
       value: 136
@@ -827,3 +846,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
+--- !u!1 &2002482832 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3779365213484096681, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
+  m_PrefabInstance: {fileID: 1182392039}
+  m_PrefabAsset: {fileID: 0}

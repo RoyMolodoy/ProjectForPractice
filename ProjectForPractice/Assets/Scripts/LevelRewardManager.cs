@@ -209,8 +209,6 @@ public class LevelRewardManager : MonoBehaviour
             endCanvasGroup.alpha = 1f;
         }
 
-        isPanelActive = false;
-
         yield return null;
 
         TogglePlayerScripts(true);

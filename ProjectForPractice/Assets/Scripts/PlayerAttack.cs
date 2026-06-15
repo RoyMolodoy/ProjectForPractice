@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+#if UNITY_EDITOR
+using UnityEditor; // Додаємо для малювання красивого напівпрозорого сектора атаки
+#endif
+
 [RequireComponent(typeof(AnimsController))]
 public class PlayerAttack : MonoBehaviour
 {
@@ -158,10 +162,28 @@ public class PlayerAttack : MonoBehaviour
     {
         if (attackPoint == null) return;
 
+        Vector3 forward = transform.right;
+
+        // 1. Малюємо центральну жовту лінію (напрямок погляду)
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(attackPoint.position, attackPoint.position + forward * attackRadius);
+
+        // 2. Обчислюємо межі нашого кута (верхню і нижню лінію)
+        Vector3 upperLimit = Quaternion.Euler(0, 0, attackAngle * 0.5f) * forward;
+        Vector3 lowerLimit = Quaternion.Euler(0, 0, -attackAngle * 0.5f) * forward;
+
+        // 3. Малюємо червоні лінії, які показують краї кута атаки
         Gizmos.color = Color.red;
+        Gizmos.DrawLine(attackPoint.position, attackPoint.position + upperLimit * attackRadius);
+        Gizmos.DrawLine(attackPoint.position, attackPoint.position + lowerLimit * attackRadius);
+
+        // 4. Малюємо зовнішнє коло радіусу
         Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
 
-        Vector3 forward = transform.right;
-        Gizmos.DrawLine(attackPoint.position, attackPoint.position + forward * attackRadius);
+#if UNITY_EDITOR
+        // 5. Заливаємо сектор атаки напівпрозорим кольором (працює тільки в Unity Editor)
+        Handles.color = new Color(1f, 0f, 0f, 0.15f); // Червоний з прозорістю 15%
+        Handles.DrawSolidArc(attackPoint.position, Vector3.forward, lowerLimit, attackAngle, attackRadius);
+#endif
     }
 }

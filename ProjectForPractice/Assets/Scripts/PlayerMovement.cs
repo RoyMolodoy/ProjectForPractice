@@ -25,10 +25,12 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask groundLayer;
     public float groundCheckRadius = 0.12f;
 
-    [Header("Dash")]
+    [Header("Dash UI")]
     public float dashSpeed = 20f;
     public float dashDuration = 0.2f;
     public float dashCooldown = 1f;
+    public GameObject dashIconUI; // ÍÎÂÅ: Îá'ºêò ³êîíêè äåøà
+    public TextMeshProUGUI dashCooldownText; // ÏĞÎÑÒÈÉ ÒÀÉÌÅĞ
 
     Rigidbody2D rb;
 
@@ -37,8 +39,8 @@ public class PlayerMovement : MonoBehaviour
     bool jumpRequest;
     bool doubleJumpAvailable;
 
-    bool dashRequest;
-    bool isDashing;
+    public bool dashRequest;
+    public bool isDashing;
     float dashCooldownTimer;
     float defaultGravity;
 
@@ -50,12 +52,17 @@ public class PlayerMovement : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        defaultGravity = rb.gravityScale; 
+        defaultGravity = rb.gravityScale;
         audioManager = GetComponent<AudioManager>();
     }
+
     private void Start()
     {
         anims = GetComponent<AnimsController>();
+
+        // Î÷èùàºìî òåêñò ³ õîâàºìî îá'ºêò íà ñòàğò³ ãğè
+        if (dashCooldownText != null) dashCooldownText.text = "";
+        if (dashIconUI != null) dashIconUI.SetActive(false);
     }
 
     void Update()
@@ -66,14 +73,14 @@ public class PlayerMovement : MonoBehaviour
 
         float input = 0f;
 
-        //  ÂÀÆÍÎ: INPUT ÂÑÅÃÄÀ Ñ×ÈÒÛÂÀÅÌ ÄËß ÀÍÈÌÀÖÈÉ
+        // ÂÀÆÍÎ: INPUT ÂÑÅÃÄÀ Ñ×ÈÒÛÂÀÅÌ ÄËß ÀÍÈÌÀÖÈÉ
         if (Input.GetKey(rightKey)) input += 1f;
         if (Input.GetKey(leftKey)) input -= 1f;
 
         if (input != 0)
             lastMoveDirection = input;
 
-        //  ÄÂÈÆÅÍÈÅ ÁËÎÊÈĞÓÅÌ, ÍÎ ÍÅ ÓÁÈÂÀÅÌ INPUT
+        // ÄÂÈÆÅÍÈÅ ÁËÎÊÈĞÓÅÌ, ÍÎ ÍÅ ÓÁÈÂÀÅÌ INPUT
         if (!attackLock)
         {
             horizontal = input;
@@ -94,11 +101,28 @@ public class PlayerMovement : MonoBehaviour
                 anims.SetDashing();
         }
 
+        // --- ËÎÃ²ÊÀ ÏĞÎÑÒÎÃÎ ÒÀÉÌÅĞÀ ÒÀ ÎÁ'ªÊÒÀ ---
         if (dashCooldownTimer > 0)
+        {
             dashCooldownTimer -= Time.deltaTime;
+            if (dashCooldownText != null)
+            {
+                dashCooldownText.text = $"{dashCooldownTimer:F1}s";
+            }
+        }
+        else
+        {
+            // Õîâàºìî òåêñò ³ âèìèêàºìî îá'ºêò, êîëè äåø ãîòîâèé
+            if (dashCooldownText != null) dashCooldownText.text = "";
+
+            if (dashIconUI != null && dashIconUI.activeSelf)
+            {
+                dashIconUI.SetActive(false);
+            }
+        }
 
         HandleFlip();
-        UpdateAnimations(); //  ÂÎÒ İÒÎ ÂÀÆÍÎ
+        UpdateAnimations(); // ÂÎÒ İÒÎ ÂÀÆÍÎ
     }
 
     void FixedUpdate()
@@ -135,13 +159,13 @@ public class PlayerMovement : MonoBehaviour
             if (isGrounded)
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-                audioManager.JumpSound();
+                if (audioManager != null) audioManager.JumpSound();
             }
             else if (canDoubleJump && doubleJumpAvailable)
             {
                 rb.velocity = new Vector2(rb.velocity.x, doubleJumpForce);
                 doubleJumpAvailable = false;
-                audioManager.JumpSound();
+                if (audioManager != null) audioManager.JumpSound();
             }
 
             jumpRequest = false;
@@ -195,7 +219,7 @@ public class PlayerMovement : MonoBehaviour
     {
         isDashing = true;
         rb.gravityScale = 0f;
-        audioManager.DashSound();
+        if (audioManager != null) audioManager.DashSound();
 
         float dir = lastMoveDirection;
         rb.velocity = new Vector2(dir * dashSpeed, 0f);
@@ -206,5 +230,8 @@ public class PlayerMovement : MonoBehaviour
         isDashing = false;
 
         dashCooldownTimer = dashCooldown;
+
+        // Âìèêàºìî îá'ºêò (³êîíêó) íà ïî÷àòêó êóëäàóíó
+        if (dashIconUI != null) dashIconUI.SetActive(true);
     }
 }
