@@ -1925,7 +1925,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BossHPBar: {fileID: 0}
-  LevelNumber: 1
+  LevelNumber: 5
 --- !u!4 &359099712
 Transform:
   m_ObjectHideFlags: 0
