@@ -276,7 +276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 247d53f6c0409714cb26cd7768195b7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 100
+  HP: 5
   MaxHP: 100
   defense: 1
   isBoss: 0
@@ -287,6 +287,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   aSourse: {fileID: 2031054879}
   damageSound: {fileID: 8300000, guid: 1880a938422bbd34eb1744708405870e, type: 3}
+  deathSound: {fileID: 8300000, guid: 3b2b947c0b617de41bdb8124bbd4d709, type: 3}
   damageVolume: 0.1
 --- !u!82 &2031054879
 AudioSource:
