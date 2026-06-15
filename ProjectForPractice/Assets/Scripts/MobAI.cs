@@ -50,6 +50,11 @@ public class MobAI : MonoBehaviour
     private float _lastAttackTime = -999f;
     private float _lastJumpTime = -999f;
 
+    public AudioSource audioSource;
+    public AudioClip attackSound;
+    public AudioClip deathSound;
+    public AudioClip damageSound;
+
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();

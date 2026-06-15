@@ -5565,38 +5565,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2031054878, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
-      propertyPath: DashAudio
-      value: 
-      objectReference: {fileID: 8300000, guid: e9e0a83a88b278c479e8075485bf9823, type: 3}
-    - target: {fileID: 2031054878, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
-      propertyPath: JumpAudio
-      value: 
-      objectReference: {fileID: 8300000, guid: 6da6a261331c91f498bc578727bf98dd, type: 3}
-    - target: {fileID: 2031054878, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
-      propertyPath: Atack1Audio
-      value: 
-      objectReference: {fileID: 8300000, guid: 050f8c6686e54084ba5c2e496ba94aeb, type: 3}
-    - target: {fileID: 2031054878, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
-      propertyPath: Atack2Audio
-      value: 
-      objectReference: {fileID: 8300000, guid: 06c5ade1b69b7da48a17c73a4c031b37, type: 3}
-    - target: {fileID: 2031054878, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
-      propertyPath: AtackHitAudio
-      value: 
-      objectReference: {fileID: 8300000, guid: 419d7dbf0158ff441aff4254f36bbf5c, type: 3}
-    - target: {fileID: 2031054878, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
-      propertyPath: PitchSwordSound.x
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 2031054878, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
-      propertyPath: PitchSwordSound.y
-      value: 1.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2031054879, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
-      propertyPath: m_Volume
-      value: 0.352
-      objectReference: {fileID: 0}
     - target: {fileID: 1689743682417654546, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
       propertyPath: m_Name
       value: Player
@@ -5645,24 +5613,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1689743682417654555, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
-      propertyPath: DashParam
-      value: Dash
-      objectReference: {fileID: 0}
     - target: {fileID: 1689743682417654556, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
-      propertyPath: groundCheckRadius
-      value: 0.38
-      objectReference: {fileID: 0}
-    - target: {fileID: 1689743682417654565, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
-      propertyPath: damageDelay1
-      value: 0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1689743682417654565, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
-      propertyPath: damageDelay2
-      value: 0.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 1689743682417654565, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
-      propertyPath: attackCooldown
+      propertyPath: canDoubleJump
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
