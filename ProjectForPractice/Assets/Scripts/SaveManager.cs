@@ -53,21 +53,28 @@ public class SaveManager : MonoBehaviour
 
     public void SaveGame()
     {
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj == null) return;
+        PlayerMovement movement = FindObjectOfType<PlayerMovement>();
 
-        PlayerMovement movement = playerObj.GetComponent<PlayerMovement>();
+        if (movement == null)
+        {
+            Debug.LogError("ЗБЕРЕЖЕННЯ ПРОВАЛЕНО: На сцені взагалі немає об'єкта зі скриптом PlayerMovement!");
+            return;
+        }
+
+        // Беремо об'єкт, на якому висить цей скрипт
+        GameObject playerObj = movement.gameObject;
         HPSystem hpSystem = playerObj.GetComponent<HPSystem>();
         PlayerAttack attack = playerObj.GetComponent<PlayerAttack>();
 
-        if (movement == null || hpSystem == null || attack == null) return;
+        if (hpSystem == null) Debug.LogError("ЗБЕРЕЖЕННЯ ПРОВАЛЕНО: Не знайдено HPSystem на гравці!");
+        if (attack == null) Debug.LogError("ЗБЕРЕЖЕННЯ ПРОВАЛЕНО: Не знайдено PlayerAttack на гравці!");
 
-        // Шукаємо LevelSystem динамічно, щоб не було помилок
+        if (hpSystem == null || attack == null) return;
+
         levelSystem = FindObjectOfType<LevelSystem>();
 
         PlayerSaveData data = new PlayerSaveData();
         data.savedSceneName = SceneManager.GetActiveScene().name;
-
         data.maxHP = hpSystem.MaxHP;
         data.defense = hpSystem.defense;
         data.damage = attack.attackDamage;
@@ -80,21 +87,23 @@ public class SaveManager : MonoBehaviour
         string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(savePath, json);
 
-        Debug.Log($"<color=green>Чекпоінт збережено!</color>");
+        Debug.Log($"<color=green>ЧЕКПОІНТ УСПІШНО ЗБЕРЕЖЕНО! Файл: {savePath}</color>");
+        Debug.Log($"Збережено дані: ХП={data.maxHP}, Урон={data.damage}, Деш={data.canDash}");
     }
 
     public void LoadGame()
     {
         if (!File.Exists(savePath)) return;
 
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj == null) return;
+        // 🔥 ШУКАЄМО ЗА СКРИПТОМ, А НЕ ЗА ТЕГОМ!
+        PlayerMovement movement = FindObjectOfType<PlayerMovement>();
+        if (movement == null) return;
 
-        PlayerMovement movement = playerObj.GetComponent<PlayerMovement>();
+        GameObject playerObj = movement.gameObject;
         HPSystem hpSystem = playerObj.GetComponent<HPSystem>();
         PlayerAttack attack = playerObj.GetComponent<PlayerAttack>();
 
-        if (movement == null || hpSystem == null || attack == null) return;
+        if (hpSystem == null || attack == null) return;
 
         string json = File.ReadAllText(savePath);
         PlayerSaveData data = JsonUtility.FromJson<PlayerSaveData>(json);
@@ -106,10 +115,12 @@ public class SaveManager : MonoBehaviour
             levelSystem.LevelNumber = data.currentLevel;
         }
 
-        hpSystem.MaxHP = data.maxHP;
-        hpSystem.HP = data.maxHP; // Відновлюємо здоров'я на максимум при завантаженні
-        hpSystem.defense = data.defense;
-        attack.attackDamage = data.damage;
+        // Якщо дані з файлу пусті (нулі), ставимо базові значення, щоб гравець не був безсмертним
+        hpSystem.MaxHP = data.maxHP > 0 ? data.maxHP : 3f; // 3 - це базове ХП
+        hpSystem.HP = hpSystem.MaxHP;
+
+        hpSystem.defense = data.defense > 0 ? data.defense : 1f; // 1 - це базовий захист (щоб не було ділення на 0)
+        attack.attackDamage = data.damage > 0 ? data.damage : 1; // 1 - базовий урон
         movement.canDash = data.canDash;
         movement.canDoubleJump = data.canDoubleJump;
 
