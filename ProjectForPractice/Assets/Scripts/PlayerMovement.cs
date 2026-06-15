@@ -63,6 +63,11 @@ public class PlayerMovement : MonoBehaviour
         // ќчищаЇмо текст ≥ ховаЇмо об'Їкт на старт≥ гри
         if (dashCooldownText != null) dashCooldownText.text = "";
         if (dashIconUI != null) dashIconUI.SetActive(false);
+
+        leftKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("LeftKey", "A"));
+        rightKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("RightKey", "D"));
+        jumpKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("JumpKey", "Space"));
+        dashKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("DashKey", "LeftShift"));
     }
 
     void Update()

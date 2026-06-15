@@ -24,10 +24,20 @@ public class KeybindManager : MonoBehaviour
 
     void Start()
     {
-        // При старті завантажуємо збережені кнопки (або ставимо стандартні, якщо гра запущена вперше)
+        // При старті завантажуємо збережені кнопки
         LoadKeys();
         UpdateUI();
+
+        // ?? НОВЕ: Якщо гравець є на сцені разом з меню паузи, одразу передаємо йому ці кнопки
+        if (player != null)
+        {
+            player.leftKey = leftKey;
+            player.rightKey = rightKey;
+            player.jumpKey = jumpKey;
+            player.dashKey = dashKey;
+        }
     }
+
 
     // Цей метод ловить БУДЬ-ЯКЕ натискання клавіатури
     void OnGUI()

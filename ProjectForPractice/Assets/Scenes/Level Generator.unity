@@ -5907,7 +5907,7 @@ PrefabInstance:
     - target: {fileID: 4208450205309516169, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1563469727}
     - target: {fileID: 4208450206271621690, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -60
@@ -8325,6 +8325,10 @@ PrefabInstance:
       propertyPath: attackAngle
       value: 150
       objectReference: {fileID: 0}
+    - target: {fileID: 1689743682417654565, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
+      propertyPath: attackDamage
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1689743682462571319, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
       propertyPath: m_TagString
       value: Untagged
@@ -8335,6 +8339,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
+--- !u!114 &1563469727 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1689743682417654556, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
+  m_PrefabInstance: {fileID: 1563469726}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e87a805e43b03334aa3d05ebaaf2bd8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1576260098
 GameObject:
   m_ObjectHideFlags: 0
