@@ -60,6 +60,9 @@ public class HPSystem : MonoBehaviour
 
                 if (gameObject.CompareTag("Player"))
                 {
+                    if (aSourse != null && damageSound != null)
+                        aSourse.volume = damageVolume;
+                    aSourse.PlayOneShot(damageSound);
                     StartCoroutine(InvulnerabilityRoutine());
                 }
             }
@@ -72,12 +75,13 @@ public class HPSystem : MonoBehaviour
             }
             else if (gameObject.CompareTag("Player"))
             {
+                
                 StartCoroutine(InvulnerabilityRoutine());
             }
         }
-        if (aSourse != null && damageSound != null)
+        /*if (aSourse != null && damageSound != null)
             aSourse.volume = damageVolume;
-            aSourse.PlayOneShot(damageSound);
+            aSourse.PlayOneShot(damageSound);*/
     }
 
     public void PlusHP(int plusHP)
