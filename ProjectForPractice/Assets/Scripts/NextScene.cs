@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement; // Обов'язково для роботи зі сценами
 
 public class NextScene : MonoBehaviour
 {
+    public bool AddLvl = true;
     [Header("Налаштування завантаження")]
     [Tooltip("Точна назва сцени, яку треба завантажити (як у вікні Build Settings)")]
     public string sceneToLoad;
@@ -38,7 +39,7 @@ public class NextScene : MonoBehaviour
 
         // Перед тим як знищити поточну сцену, фіксуємо прогрес у файл,
         // щоб SaveManager автоматично підтягнув його на новому рівні.
-        if (saveBeforeTransition && SaveManager.Instance != null)
+        if (saveBeforeTransition && SaveManager.Instance != null && AddLvl)
         {
             LevelSystem levelSystem = FindObjectOfType<LevelSystem>();
             levelSystem?.PlusLevel(); // Підвищуємо рівень перед збереженням

@@ -1925,7 +1925,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BossHPBar: {fileID: 0}
-  LevelNumber: 5
+  LevelNumber: 1
 --- !u!4 &359099712
 Transform:
   m_ObjectHideFlags: 0
@@ -3215,6 +3215,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &701349660 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2335756230365333801, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
+  m_PrefabInstance: {fileID: 1182392039}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &719488712
 GameObject:
   m_ObjectHideFlags: 0
@@ -5743,6 +5748,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 491425653462813225, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
+      propertyPath: sceneToLoad
+      value: Level Generator
+      objectReference: {fileID: 0}
     - target: {fileID: 1100041276000076971, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -5754,6 +5763,10 @@ PrefabInstance:
     - target: {fileID: 1529891036157673088, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
       propertyPath: m_TagString
       value: BossHPObject
+      objectReference: {fileID: 0}
+    - target: {fileID: 3095674399977812240, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
+      propertyPath: m_Name
+      value: ResetLevel
       objectReference: {fileID: 0}
     - target: {fileID: 3779365213484096681, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
       propertyPath: m_IsActive
@@ -6026,6 +6039,14 @@ PrefabInstance:
     - target: {fileID: 6046538365105833773, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
       propertyPath: saveBeforeTransition
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123788529576456964, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
+      propertyPath: m_Name
+      value: Reset
+      objectReference: {fileID: 0}
+    - target: {fileID: 8312804213261038028, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
+      propertyPath: m_text
+      value: RestartLevel
       objectReference: {fileID: 0}
     - target: {fileID: 8384301366187655129, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
       propertyPath: saveBeforeTransition
@@ -8292,6 +8313,10 @@ PrefabInstance:
       propertyPath: MaxHP
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 1689743682417654564, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
+      propertyPath: deathScreenPanel
+      value: 
+      objectReference: {fileID: 701349660}
     - target: {fileID: 1689743682417654564, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
       propertyPath: hitFlashDuration
       value: 0.2

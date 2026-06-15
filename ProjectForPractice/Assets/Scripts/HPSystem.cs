@@ -17,6 +17,12 @@ public class HPSystem : MonoBehaviour
     [SerializeField] private int numberOfFlashes = 6;
     [SerializeField] private SpriteRenderer spriteRenderer;
 
+    [Header("Death Screen (Тільки для Player)")]
+    public GameObject deathScreenPanel;
+    public float deathFadeDuration = 1.5f; // За скільки секунд екран плавно з'явиться
+    [Range(0.1f, 1f)]
+    public float maxDeathAlpha = 0.8f; // Максимальна непрозорість (не на 100%)
+
     private AnimsController animsController;
     private bool _isInvulnerable = false;
     public AudioSource aSourse;
@@ -44,6 +50,16 @@ public class HPSystem : MonoBehaviour
         {
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         }
+
+        // Ховаємо екран смерті на старті і налаштовуємо його прозорість на 0
+        if (deathScreenPanel != null)
+        {
+            CanvasGroup cg = deathScreenPanel.GetComponent<CanvasGroup>();
+            if (cg == null) cg = deathScreenPanel.AddComponent<CanvasGroup>();
+
+            cg.alpha = 0f;
+            deathScreenPanel.SetActive(false);
+        }
     }
 
     public void MinusHP(float minusHP)
@@ -66,21 +82,34 @@ public class HPSystem : MonoBehaviour
                     gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
                     gameObject.GetComponent<Collider2D>().enabled = false;
                     PlayerMovement playerMovement = GetComponent<PlayerMovement>();
-                    if(playerMovement != null)
+                    PlayerAttack playerAttack = GetComponent<PlayerAttack>();
+
+                    if (playerMovement != null)
                         playerMovement.enabled = false;
+                    if (playerAttack != null)
+                        playerAttack.enabled = false;
+
                     animsController.DeathAnim();
-                    aSourse.PlayOneShot(deathSound);
+
+                    if (aSourse != null && deathSound != null)
+                        aSourse.PlayOneShot(deathSound);
+
+                    // ВИКЛИКАЄМО ПЛАВНИЙ ЕКРАН СМЕРТІ ОДРАЗУ
+                    if (gameObject.CompareTag("Player"))
+                    {
+                        StartCoroutine(ShowDeathScreenRoutine());
+                    }
                 }
             }
             else
             {
-                // animsController.HurtAnim();
-
                 if (gameObject.CompareTag("Player"))
                 {
                     if (aSourse != null && damageSound != null)
+                    {
                         aSourse.volume = damageVolume;
-                    aSourse.PlayOneShot(damageSound);
+                        aSourse.PlayOneShot(damageSound);
+                    }
                     StartCoroutine(InvulnerabilityRoutine());
                 }
             }
@@ -89,17 +118,20 @@ public class HPSystem : MonoBehaviour
         {
             if (HP <= 0)
             {
-                Destroy(gameObject);
+                if (gameObject.CompareTag("Player"))
+                {
+                    StartCoroutine(ShowDeathScreenRoutine());
+                }
+                else
+                {
+                    Destroy(gameObject);
+                }
             }
             else if (gameObject.CompareTag("Player"))
             {
-
                 StartCoroutine(InvulnerabilityRoutine());
             }
         }
-        /*if (aSourse != null && damageSound != null)
-            aSourse.volume = damageVolume;
-            aSourse.PlayOneShot(damageSound);*/
     }
 
     public void PlusHP(int plusHP)
@@ -112,6 +144,36 @@ public class HPSystem : MonoBehaviour
 
             if (HPBar != null)
                 HPBar.fillAmount = (float)HP / MaxHP;
+        }
+    }
+
+    // 🔥 ОНОВЛЕНА КОРУТИНА (Плавна поява)
+    private IEnumerator ShowDeathScreenRoutine()
+    {
+        if (deathScreenPanel != null)
+        {
+            deathScreenPanel.SetActive(true);
+
+            CanvasGroup canvasGroup = deathScreenPanel.GetComponent<CanvasGroup>();
+            if (canvasGroup == null)
+            {
+                canvasGroup = deathScreenPanel.AddComponent<CanvasGroup>();
+            }
+
+            canvasGroup.alpha = 0f; // Починаємо з абсолютної прозорості
+            float elapsed = 0f;
+
+            // Використовуємо unscaledDeltaTime на випадок, якщо ти потім додаш паузу гри (Time.timeScale = 0)
+            while (elapsed < deathFadeDuration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                canvasGroup.alpha = Mathf.Lerp(0f, maxDeathAlpha, elapsed / deathFadeDuration);
+                yield return null;
+            }
+
+            // Гарантуємо, що фінальна прозорість точно відповідає налаштуванню
+            canvasGroup.alpha = maxDeathAlpha;
+            Time.timeScale = 0f; // Зупиняємо гру після появи екрану смерті
         }
     }
 
