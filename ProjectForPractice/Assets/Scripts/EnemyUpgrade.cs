@@ -26,7 +26,7 @@ public class EnemyUpgrade : MonoBehaviour
                 MobAI mobAI = enemyHP.GetComponent<MobAI>();
                 if (mobAI != null)
                 {
-                    mobAI.damage = mobAI.damage + levelSystem.LevelNumber;
+                    mobAI.damage = mobAI.damage + levelSystem.LevelNumber/2;
                 }
             }
             if (enemyHP.gameObject.CompareTag("Enemy") && enemyHP.isBoss)
