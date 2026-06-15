@@ -8,7 +8,6 @@ public class PlayerAttack : MonoBehaviour
 {
     [Header("Attack settings")]
     public Transform attackPoint;
-    public float attackRange = 0.5f;
     public float attackRadius = 1.2f;
     public float attackAngle = 90f;
 
@@ -58,20 +57,20 @@ public class PlayerAttack : MonoBehaviour
 
         if (attackPoint == null) return;
 
-        // get all nearby objects
         Collider2D[] allHits =
             Physics2D.OverlapCircleAll(attackPoint.position, attackRadius);
 
         List<Collider2D> targets = new List<Collider2D>();
 
-        Vector2 forward = transform.localScale.x >= 0 ? Vector2.right : Vector2.left;
+        // FIX: правильний напрямок під Y rotation flip
+        Vector2 forward = transform.right;
 
         foreach (Collider2D col in allHits)
         {
             if (!col.CompareTag(enemyTag)) continue;
 
             Vector2 dirToEnemy =
-                ((Vector2)col.transform.position - (Vector2)transform.position).normalized;
+                ((Vector2)col.transform.position - (Vector2)attackPoint.position).normalized;
 
             float angle = Vector2.Angle(forward, dirToEnemy);
 
@@ -145,6 +144,7 @@ public class PlayerAttack : MonoBehaviour
 
             if (hpComp != null)
                 hpComp.SendMessage("MinusHP", damage, SendMessageOptions.DontRequireReceiver);
+            audioManager.AtackHitSound();
         }
     }
 
@@ -159,12 +159,9 @@ public class PlayerAttack : MonoBehaviour
         if (attackPoint == null) return;
 
         Gizmos.color = Color.red;
-
-        // draw radius
         Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
 
-        // draw forward line (debug direction)
-        Vector3 forward = transform.localScale.x >= 0 ? Vector3.right : Vector3.left;
+        Vector3 forward = transform.right;
         Gizmos.DrawLine(attackPoint.position, attackPoint.position + forward * attackRadius);
     }
 }

@@ -189,7 +189,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  groundCheckRadius: 0.2
+  groundCheckRadius: 0.38
   dashSpeed: 20
   dashDuration: 0.2
   dashCooldown: 1
@@ -249,11 +249,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackPoint: {fileID: 1689743682462571318}
-  attackRange: 1.44
   attackRadius: 1.4
   attackAngle: 80
   attackDamage: 10
-  attackCooldown: 0.5
+  attackCooldown: 1
   enemyTag: Enemy
   AlternativeAtack: 1
   AttackAnimationChanse: 80
@@ -280,6 +279,9 @@ MonoBehaviour:
   invulnerabilityDuration: 1.5
   numberOfFlashes: 6
   spriteRenderer: {fileID: 0}
+  aSourse: {fileID: 0}
+  damageSound: {fileID: 0}
+  damageVolume: 0.1
 --- !u!82 &2031054879
 AudioSource:
   m_ObjectHideFlags: 0
@@ -292,7 +294,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.352
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -389,12 +391,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aSourse: {fileID: 2031054879}
-  JumpAudio: {fileID: 8300000, guid: e9e0a83a88b278c479e8075485bf9823, type: 3}
-  Atack1Audio: {fileID: 8300000, guid: 0501856d3006a1243b01ae73ea83de9b, type: 3}
+  JumpAudio: {fileID: 8300000, guid: 6da6a261331c91f498bc578727bf98dd, type: 3}
+  Atack1Audio: {fileID: 8300000, guid: 050f8c6686e54084ba5c2e496ba94aeb, type: 3}
   Atack2Audio: {fileID: 8300000, guid: 06c5ade1b69b7da48a17c73a4c031b37, type: 3}
-  AtackHitAudio: {fileID: 0}
+  AtackHitAudio: {fileID: 8300000, guid: 419d7dbf0158ff441aff4254f36bbf5c, type: 3}
   StepsAudio: {fileID: 0}
-  PitchSwordSound: {x: 0.9, y: 1.1}
+  DashAudio: {fileID: 8300000, guid: e9e0a83a88b278c479e8075485bf9823, type: 3}
+  PitchSwordSound: {x: 0.9, y: 1.2}
 --- !u!1 &1689743682462571319
 GameObject:
   m_ObjectHideFlags: 0

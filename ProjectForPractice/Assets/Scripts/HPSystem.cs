@@ -17,6 +17,10 @@ public class HPSystem : MonoBehaviour
 
     private AnimsController animsController;
     private bool _isInvulnerable = false;
+    public AudioSource aSourse;
+    public AudioClip damageSound;
+    [Range(0, 1)]
+    public float damageVolume = 0.1f;
 
     private void Start()
     {
@@ -28,7 +32,7 @@ public class HPSystem : MonoBehaviour
         }
     }
 
-    void MinusHP(float minusHP)
+    public void MinusHP(float minusHP)
     {
         if (_isInvulnerable) return;
         if (defense > 0)
@@ -71,6 +75,9 @@ public class HPSystem : MonoBehaviour
                 StartCoroutine(InvulnerabilityRoutine());
             }
         }
+        if (aSourse != null && damageSound != null)
+            aSourse.volume = damageVolume;
+            aSourse.PlayOneShot(damageSound);
     }
 
     public void PlusHP(int plusHP)

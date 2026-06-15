@@ -19,6 +19,16 @@ public class ProceduralLevelGenerator : MonoBehaviour
 
     private void Start()
     {
+        LevelSystem levelSystem = FindObjectOfType<LevelSystem>();
+        if (levelSystem != null)
+        {
+            middleSectionCount = levelSystem.LevelNumber;
+            if (levelSystem.LevelNumber % 5 == 0)
+            {
+                GenerateWithBoss = true;
+            }
+
+        }
         GenerateLevel();
     }
 

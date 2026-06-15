@@ -44,10 +44,18 @@ public class PlayerMovement : MonoBehaviour
 
     float lastMoveDirection = 1f;
 
+    private AudioManager audioManager;
+    AnimsController anims;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        defaultGravity = rb.gravityScale;
+        defaultGravity = rb.gravityScale; 
+        audioManager = GetComponent<AudioManager>();
+    }
+    private void Start()
+    {
+        anims = GetComponent<AnimsController>();
     }
 
     void Update()
@@ -82,6 +90,8 @@ public class PlayerMovement : MonoBehaviour
             dashCooldownTimer <= 0f && !isDashing)
         {
             dashRequest = true;
+            if (anims != null)
+                anims.SetDashing();
         }
 
         if (dashCooldownTimer > 0)
@@ -125,11 +135,13 @@ public class PlayerMovement : MonoBehaviour
             if (isGrounded)
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+                audioManager.JumpSound();
             }
             else if (canDoubleJump && doubleJumpAvailable)
             {
                 rb.velocity = new Vector2(rb.velocity.x, doubleJumpForce);
                 doubleJumpAvailable = false;
+                audioManager.JumpSound();
             }
 
             jumpRequest = false;
@@ -151,8 +163,6 @@ public class PlayerMovement : MonoBehaviour
             // во врем€ атаки Ч Ќ≈ трогаем анимацию движени€
             return;
         }
-
-        AnimsController anims = GetComponentInChildren<AnimsController>();
         if (anims == null) return;
 
         bool moving = Mathf.Abs(horizontal) > 0.1f;
@@ -185,6 +195,7 @@ public class PlayerMovement : MonoBehaviour
     {
         isDashing = true;
         rb.gravityScale = 0f;
+        audioManager.DashSound();
 
         float dir = lastMoveDirection;
         rb.velocity = new Vector2(dir * dashSpeed, 0f);
@@ -193,6 +204,7 @@ public class PlayerMovement : MonoBehaviour
 
         rb.gravityScale = defaultGravity;
         isDashing = false;
+
         dashCooldownTimer = dashCooldown;
     }
 }

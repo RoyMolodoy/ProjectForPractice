@@ -13,7 +13,7 @@ public class SaveManager : MonoBehaviour
     public TextMeshProUGUI Health;
     public TextMeshProUGUI Defence;
     public TextMeshProUGUI Damage;
-
+    public LevelSystem levelSystem;
     private void Awake()
     {
         // Робимо так, щоб SaveManager НІКОЛИ не знищувався при перезавантаженні сцени
@@ -28,6 +28,7 @@ public class SaveManager : MonoBehaviour
         }
 
         savePath = Application.persistentDataPath + "/savegame.json";
+        Debug.Log(Application.persistentDataPath + "/savegame.json");
     }
 
     // --- ПІДПИСКА НА ПОДІЮ ЗАВАНТАЖЕННЯ СЦЕНИ ---
@@ -61,14 +62,16 @@ public class SaveManager : MonoBehaviour
 
         PlayerSaveData data = new PlayerSaveData();
         data.savedSceneName = SceneManager.GetActiveScene().name;
-        data.playerPosX = playerObj.transform.position.x;
-        data.playerPosY = playerObj.transform.position.y;
-        data.currentHP = hpSystem.HP;
+        //data.playerPosX = playerObj.transform.position.x;
+        //data.playerPosY = playerObj.transform.position.y;
+        //data.currentHP = hpSystem.HP;
         data.maxHP = hpSystem.MaxHP;
         data.defense = hpSystem.defense;
         data.damage = attack.attackDamage;
         data.canDash = movement.canDash;
         data.canDoubleJump = movement.canDoubleJump;
+        if(levelSystem != null)
+            data.currentLevel = levelSystem.LevelNumber;
 
         string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(savePath, json);
@@ -92,10 +95,11 @@ public class SaveManager : MonoBehaviour
         string json = File.ReadAllText(savePath);
         PlayerSaveData data = JsonUtility.FromJson<PlayerSaveData>(json);
 
-        playerObj.transform.position = new Vector2(data.playerPosX, data.playerPosY);
-
+        //playerObj.transform.position = new Vector2(data.playerPosX, data.playerPosY);
+        if(levelSystem != null && data.currentLevel > 0)
+            levelSystem.LevelNumber = data.currentLevel;
         hpSystem.MaxHP = data.maxHP;
-        hpSystem.HP = data.currentHP;
+        hpSystem.HP = data.maxHP;
         hpSystem.defense = data.defense;
         attack.attackDamage = data.damage;
         movement.canDash = data.canDash;
@@ -149,13 +153,13 @@ public class SaveManager : MonoBehaviour
             else
             {
                 Debug.LogWarning("У збереженні немає назви сцени! Запускаємо перший рівень.");
-                SceneManager.LoadScene("Pavlo'sScene");
+                SceneManager.LoadScene("Level Generator");
             }
         }
         else
         {
             Debug.Log("Файлу збереження немає. Починаємо нову гру.");
-            SceneManager.LoadScene("Pavlo'sScene");
+            SceneManager.LoadScene("Level Generator");
         }
     }
     // --- МЕТОД ДЛЯ КНОПКИ "ОЧИСТИТИ ЗБЕРЕЖЕННЯ" (В НАЛАШТУВАННЯХ) ---

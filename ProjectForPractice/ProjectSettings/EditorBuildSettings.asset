@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/StartScene.unity
     guid: db1d2d088b3d18f4899adf52ccfd3480
   - enabled: 1
+    path: Assets/Scenes/Level Generator.unity
+    guid: 64c7acd2b56efb64ba01bafbd0c0b9d2
+  - enabled: 0
     path: Assets/Scenes/Pavlo'sScene.unity
     guid: e9031e2dbc5c8c543822314626855990
   m_configObjects: {}

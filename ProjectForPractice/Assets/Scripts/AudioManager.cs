@@ -12,6 +12,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] public AudioClip Atack2Audio;
     [SerializeField] public AudioClip AtackHitAudio;
     [SerializeField] public AudioClip StepsAudio;
+    [SerializeField] public AudioClip DashAudio;
 
     [SerializeField] public Vector2 PitchSwordSound = new Vector2(0.9f, 1.1f);
 
@@ -30,6 +31,7 @@ public class AudioManager : MonoBehaviour
     public void JumpSound()
     {
         aSourse.clip = JumpAudio;
+        aSourse.pitch = UnityEngine.Random.Range(PitchSwordSound.x, PitchSwordSound.y);
         aSourse.Play();
         Debug.Log("Jump sound played");
     }   
@@ -47,5 +49,20 @@ public class AudioManager : MonoBehaviour
         aSourse.pitch = UnityEngine.Random.Range(PitchSwordSound.x, PitchSwordSound.y);
         aSourse.Play();
         Debug.Log("Atack1 sound played");
+    }
+
+    public void DashSound()
+    {
+        aSourse.clip = DashAudio;
+        aSourse.pitch = UnityEngine.Random.Range(PitchSwordSound.x, PitchSwordSound.y);
+        aSourse.Play();
+        Debug.Log("Dash sound played");
+    }
+    public void AtackHitSound()
+    {
+        aSourse.clip = AtackHitAudio;
+        aSourse.pitch = UnityEngine.Random.Range(PitchSwordSound.x, PitchSwordSound.y);
+        aSourse.Play();
+        Debug.Log("AtackHit sound played");
     }
 }

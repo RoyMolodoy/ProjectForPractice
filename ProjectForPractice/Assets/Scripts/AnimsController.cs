@@ -15,7 +15,7 @@ public class AnimsController : MonoBehaviour
     [SerializeField] string runningParam = "isRunning";
     [SerializeField] string jumpingParam = "isJumping";
     [SerializeField] string fallingParam = "isFalling";
-    [SerializeField] string DashParam = "Dash";
+    [SerializeField] string DashParam = "isDashing";
 
     [Header("Attack")]
     [SerializeField] string attackingBoolParam = "isAttacking";
@@ -78,10 +78,10 @@ public class AnimsController : MonoBehaviour
         animator.SetBool(fallingParam, value);
     }
 
-    public void SetDashing(bool value)
+    public void SetDashing()
     {
         if (animator == null) return;
-        animator.SetBool(DashParam, value);
+        animator.SetTrigger(DashParam);
     }
 
     public void SetAttacking(bool value)

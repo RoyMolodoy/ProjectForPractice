@@ -40,6 +40,8 @@ public class NextScene : MonoBehaviour
         // щоб SaveManager автоматично підтягнув його на новому рівні.
         if (saveBeforeTransition && SaveManager.Instance != null)
         {
+            LevelSystem levelSystem = FindObjectOfType<LevelSystem>();
+            levelSystem?.PlusLevel(); // Підвищуємо рівень перед збереженням
             SaveManager.Instance.SaveGame();
         }
 
