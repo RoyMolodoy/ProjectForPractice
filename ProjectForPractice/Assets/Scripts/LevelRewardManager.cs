@@ -187,6 +187,17 @@ public class LevelRewardManager : MonoBehaviour
         SkillData chosenSkill = currentChoices[index];
         ApplySkillEffect(chosenSkill);
 
+        // 🔥 АВТОЗБЕРЕЖЕННЯ ПРОГРЕСУ 🔥
+        // Одразу після того, як ми видали скіл гравцю, примусово зберігаємо гру!
+        if (SaveManager.Instance != null)
+        {
+            SaveManager.Instance.SaveGame();
+        }
+        else
+        {
+            Debug.LogWarning("Не можу зберегти скіл, бо SaveManager не знайдено на сцені!");
+        }
+
         StartCoroutine(FadeOutPanel());
     }
 

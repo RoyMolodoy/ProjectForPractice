@@ -33,7 +33,7 @@ public class MobAI : MonoBehaviour
     [SerializeField] public HPSystem HP;
 
     [Header("Attack")]
-    [SerializeField] private float attackRange = 0.8f;
+    [SerializeField] private float attackRange = 0.8f; // Радіус початку атаки
     [SerializeField] private float attackCooldown = 1.0f;
     [SerializeField] public int damage = 1;
     [SerializeField] private float attackDuration = 0.6f;
@@ -75,8 +75,6 @@ public class MobAI : MonoBehaviour
         if (playerObj != null)
         {
             _player = playerObj.transform;
-
-            // 🔥 FIX: одразу повертаємось до гравця при спавні
             FacePlayerInstant();
         }
     }
@@ -98,7 +96,6 @@ public class MobAI : MonoBehaviour
             groundLayer
         );
 
-        // 🔥 ANTI JITTER ONLY IF DIRECTLY ABOVE
         Vector2 toPlayer = _player.position - transform.position;
 
         bool playerDirectlyAbove =
@@ -181,13 +178,20 @@ public class MobAI : MonoBehaviour
         if (_isAttacking) return;
         if (Time.time - _lastAttackTime < attackCooldown) return;
 
+        // Починаємо атаку, якщо гравець у зоні attackRange
         if (Vector2.Distance(transform.position, _player.position) > attackRange)
             return;
 
         FacePlayerInstant();
 
         _lastAttackTime = Time.time;
-        audioSource.PlayOneShot(attackSound);
+
+        // Перевіряємо, чи є звук, щоб гра не крашилась
+        if (audioSource != null && attackSound != null)
+        {
+            audioSource.PlayOneShot(attackSound);
+        }
+
         StartCoroutine(AttackRoutine());
     }
 
@@ -200,10 +204,37 @@ public class MobAI : MonoBehaviour
 
         yield return new WaitForSeconds(attackHitDelay);
 
-        if (Vector2.Distance(transform.position, _player.position) <= attackRange)
+        if (_player != null)
         {
-            _player.gameObject.SendMessage("MinusHP", damage,
-                SendMessageOptions.DontRequireReceiver);
+            float dist = Vector2.Distance(transform.position, _player.position);
+
+            // 🔥 ЗБІЛЬШИВ ЗАПАС ДО 1.5f. Тепер моб гарантовано не промаже через криві півоти!
+            if (dist <= attackRange + 1.5f)
+            {
+                // Шукаємо скрипт здоров'я напряму
+                HPSystem playerHP = _player.GetComponent<HPSystem>();
+
+                // Якщо його немає на головному об'єкті, шукаємо у дочірніх (в картинці)
+                if (playerHP == null)
+                {
+                    playerHP = _player.GetComponentInChildren<HPSystem>();
+                }
+
+                if (playerHP != null)
+                {
+                    playerHP.MinusHP((float)damage); // Прямий виклик!
+                    Debug.Log($"<color=red>Моб ВДАРИВ гравця! Базовий урон: {damage}</color>");
+                }
+                else
+                {
+                    Debug.LogError("Моб дістав до гравця, але не зміг знайти скрипт HPSystem!");
+                }
+            }
+            else
+            {
+                // Цей лог покаже, якщо гравець просто стоїть занадто далеко для удару
+                Debug.Log($"<color=yellow>Моб промахнувся. Відстань до гравця: {dist}, а радіус атаки: {attackRange}</color>");
+            }
         }
 
         yield return new WaitForSeconds(Mathf.Max(0f, attackDuration - attackHitDelay));
@@ -223,7 +254,6 @@ public class MobAI : MonoBehaviour
         }
     }
 
-    // 🔥 FIX: завжди дивимось на гравця правильно
     private void FacePlayerInstant()
     {
         if (_player == null) return;

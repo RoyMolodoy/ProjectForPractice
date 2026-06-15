@@ -8300,6 +8300,14 @@ PrefabInstance:
       propertyPath: attackAngle
       value: 150
       objectReference: {fileID: 0}
+    - target: {fileID: 1689743682462571319, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 1689743682945813850, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
 --- !u!1 &1576260098
