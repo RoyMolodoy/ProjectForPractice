@@ -22,7 +22,11 @@ public class ProceduralLevelGenerator : MonoBehaviour
         LevelSystem levelSystem = FindObjectOfType<LevelSystem>();
         if (levelSystem != null)
         {
-            middleSectionCount = levelSystem.LevelNumber;
+            if (levelSystem.LevelNumber > 10)
+                middleSectionCount = 10;
+            else 
+                middleSectionCount = levelSystem.LevelNumber;
+
             if (levelSystem.LevelNumber % 5 == 0)
             {
                 GenerateWithBoss = true;
@@ -73,6 +77,8 @@ public class ProceduralLevelGenerator : MonoBehaviour
         }
         else
             SpawnSection(finishSection);
+
+        EnemyUpgrade.Instance.UpgradeAllEnemies();
     }
 
     private void SpawnRandomSection()

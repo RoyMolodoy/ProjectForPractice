@@ -4,7 +4,7 @@ public class FlyingHead : MonoBehaviour
 {
     [SerializeField] private float speed = 4.5f;
     [SerializeField] private float lifetime = 3f; // Час життя голови в секундах
-    [SerializeField] private int damage = 1;
+    [SerializeField] public float damage = 1;
 
     private Transform _target;
     private float _destroyTime;

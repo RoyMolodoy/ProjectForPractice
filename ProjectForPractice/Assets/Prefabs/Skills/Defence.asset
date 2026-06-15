@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Defence
   m_EditorClassIdentifier: 
   skillName: I AM TANK
-  description: Give +1 extra defence
+  description: Give +1 extra defence (reduce the damage taken by 10%)
   skillIcon: {fileID: 0}
   type: 3
   rarity: 0

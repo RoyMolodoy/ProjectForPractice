@@ -7,7 +7,7 @@ public class SkyBeam : MonoBehaviour
     [Header("Таймінги атаки")]
     [SerializeField] private float warningDuration = 0.6f; // Скільки часу є у гравця, щоб втекти
     [SerializeField] private float strikeDuration = 0.2f;  // Скільки часу промінь залишається небезпечним
-    [SerializeField] private int damage = 2;
+    [SerializeField] public float damage = 2;
 
     [Header("Візуал (Кольори)")]
     [SerializeField] private SpriteRenderer beamSprite;
@@ -36,17 +36,10 @@ public class SkyBeam : MonoBehaviour
 
     private IEnumerator BeamSequence()
     {
-        // --- ФАЗА 1: ПОПЕРЕДЖЕННЯ ---
-        // Промінь з'являється, але він напівпрозорий і не наносить шкоди
         if (beamSprite != null) beamSprite.color = warningColor;
 
         // Чекаємо, поки гравець відстрибне
         yield return new WaitForSeconds(warningDuration);
-
-
-        // --- ФАЗА 2: УДАР ---
-        // Промінь стає яскравим, колайдер вмикається і починає бити!
-        if (beamSprite != null) beamSprite.color = strikeColor;
         _collider.enabled = true;
 
         // (Тут можна додати звук удару блискавки або лазера)

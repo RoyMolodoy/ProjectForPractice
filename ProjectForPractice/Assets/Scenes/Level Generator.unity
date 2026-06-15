@@ -174,6 +174,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70d77670abb48464ca06cdabb60d1059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BossHPBar: {fileID: 0}
   LevelNumber: 1
 --- !u!4 &359099712
 Transform:
@@ -253,7 +254,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5348837054054987054, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
   m_PrefabInstance: {fileID: 1182392039}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1927111308}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0d32c6b72d650eb42a9ca803703adebf, type: 3}
@@ -266,6 +267,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1100041276000076971, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1100041276000076971, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
+      propertyPath: m_TagString
+      value: BossHPBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 1529891036157673088, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
+      propertyPath: m_TagString
+      value: BossHPObject
+      objectReference: {fileID: 0}
     - target: {fileID: 3779365213484096681, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -844,8 +857,30 @@ PrefabInstance:
       propertyPath: hitFlashDuration
       value: 0.2
       objectReference: {fileID: 0}
+    - target: {fileID: 1689743682417654565, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
+      propertyPath: attackAngle
+      value: 150
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
+--- !u!1 &1927111308 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1379688027435923597, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
+  m_PrefabInstance: {fileID: 1182392039}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1927111311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927111308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 206a1eeddb9264842918111cedec7f00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelSystem: {fileID: 359099711}
 --- !u!1 &2002482832 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3779365213484096681, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}

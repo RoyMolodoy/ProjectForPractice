@@ -253,6 +253,9 @@ MonoBehaviour:
   invulnerabilityDuration: 1.5
   numberOfFlashes: 6
   spriteRenderer: {fileID: 0}
+  aSourse: {fileID: 0}
+  damageSound: {fileID: 0}
+  damageVolume: 0.1
 --- !u!114 &4207141455377087003
 MonoBehaviour:
   m_ObjectHideFlags: 0

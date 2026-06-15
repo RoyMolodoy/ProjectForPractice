@@ -1,4 +1,4 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,9 +8,11 @@ public class HPSystem : MonoBehaviour
     public float HP = 3;
     public float MaxHP = 3;
     public float defense = 1;
+    public bool isBoss = false;
     public Image HPBar;
+    public GameObject BossHPBar;
 
-    [Header("Invulnerability (“≥Î¸ÍË ‰Îˇ Player)")]
+    [Header("Invulnerability (–¢—ñ–ª—å–∫–∏ –¥–ª—è Player)")]
     [SerializeField] private float invulnerabilityDuration = 1.5f;
     [SerializeField] private int numberOfFlashes = 6;
     [SerializeField] private SpriteRenderer spriteRenderer;
@@ -24,6 +26,17 @@ public class HPSystem : MonoBehaviour
 
     private void Start()
     {
+        if (isBoss)
+        {
+            GameObject barObj = GameObject.FindGameObjectWithTag("BossHPBar");
+            if (barObj != null)
+                HPBar = barObj.GetComponent<Image>();
+
+            BossHPBar = GameObject.FindGameObjectWithTag("BossHPObject");
+            if (BossHPBar != null)
+                BossHPBar.SetActive(false);
+        }
+
         animsController = GetComponent<AnimsController>();
 
         if (gameObject.CompareTag("Player") && spriteRenderer == null)
@@ -36,10 +49,10 @@ public class HPSystem : MonoBehaviour
     {
         if (_isInvulnerable) return;
         if (defense > 0)
-            minusHP = minusHP/defense;
+            minusHP = minusHP / defense;
         HP -= minusHP;
 
-        // ŒÌÓ‚Î˛∫ÏÓ UI
+        // –û–Ω–æ–≤–ª—é—î–º–æ UI
         if (HPBar != null)
             HPBar.fillAmount = (float)HP / MaxHP;
 
@@ -75,7 +88,7 @@ public class HPSystem : MonoBehaviour
             }
             else if (gameObject.CompareTag("Player"))
             {
-                
+
                 StartCoroutine(InvulnerabilityRoutine());
             }
         }

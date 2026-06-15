@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: HP
   m_EditorClassIdentifier: 
   skillName: TOO FAT
-  description: Give +1 extra health point
+  description: Give +3 extra health point
   skillIcon: {fileID: 0}
   type: 1
   rarity: 0
-  value: 1
+  value: 3

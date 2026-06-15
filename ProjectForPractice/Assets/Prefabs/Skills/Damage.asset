@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Damage
   m_EditorClassIdentifier: 
   skillName: Stronger One
-  description: Give +1 extra damage
+  description: Give +3 extra damage
   skillIcon: {fileID: 0}
   type: 2
   rarity: 0
-  value: 1
+  value: 3

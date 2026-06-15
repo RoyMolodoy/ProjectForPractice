@@ -35,7 +35,7 @@ public class MobAI : MonoBehaviour
     [Header("Attack")]
     [SerializeField] private float attackRange = 0.8f;
     [SerializeField] private float attackCooldown = 1.0f;
-    [SerializeField] private int damage = 1;
+    [SerializeField] public int damage = 1;
     [SerializeField] private float attackDuration = 0.6f;
     [SerializeField] private float attackHitDelay = 0.2f;
 

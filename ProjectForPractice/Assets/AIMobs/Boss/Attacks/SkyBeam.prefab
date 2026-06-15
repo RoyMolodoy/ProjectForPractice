@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55bc5094cde8c9d4da8d8eae4e86d507, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  warningDuration: 1
+  warningDuration: 1.5
   strikeDuration: 0.2
   damage: 2
   beamSprite: {fileID: 0}
