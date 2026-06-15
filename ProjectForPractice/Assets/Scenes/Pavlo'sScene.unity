@@ -1107,8 +1107,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10b39f0daf04f1443aaf7953d2a1e4f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BossHPBar: {fileID: 0}
-  HPBar: {fileID: 0}
+  hpSystem: {fileID: 0}
+  needToActiveHPBar: 1
 --- !u!61 &1384910337
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2125,14 +2125,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2393417924929001700, guid: 78350df9740310b43bac0b8ad7bc8b9f, type: 3}
-      propertyPath: m_IsTrigger
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2393417924929001701, guid: 78350df9740310b43bac0b8ad7bc8b9f, type: 3}
-      propertyPath: spawnOnDeathPrefab
-      value: 
-      objectReference: {fileID: 5087392343025798831, guid: 02aa345f5527a194f81b1193f6d031f5, type: 3}
     - target: {fileID: 6068839423411600306, guid: 78350df9740310b43bac0b8ad7bc8b9f, type: 3}
       propertyPath: m_RootOrder
       value: 15
@@ -2176,14 +2168,6 @@ PrefabInstance:
     - target: {fileID: 6068839423411600306, guid: 78350df9740310b43bac0b8ad7bc8b9f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6068839423411600307, guid: 78350df9740310b43bac0b8ad7bc8b9f, type: 3}
-      propertyPath: HPBar
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 6068839423411600307, guid: 78350df9740310b43bac0b8ad7bc8b9f, type: 3}
-      propertyPath: isBoss
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8831602977527008640, guid: 78350df9740310b43bac0b8ad7bc8b9f, type: 3}
       propertyPath: m_Name
