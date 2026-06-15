@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEngine;
@@ -9,16 +9,21 @@ public class SaveManager : MonoBehaviour
     public static SaveManager Instance;
     private string savePath;
 
+    [Header("UI (РљСЂР°С‰Рµ РѕРЅРѕРІР»СЋРІР°С‚Рё Р· С–РЅС€РёС… СЃРєСЂРёРїС‚С–РІ)")]
     public TextMeshProUGUI Health;
     public TextMeshProUGUI Defence;
     public TextMeshProUGUI Damage;
-    public LevelSystem levelSystem;
+
+    // levelSystem Р±С–Р»СЊС€Рµ РЅРµ СЂРѕР±РёРјРѕ public РґР»СЏ Р†РЅСЃРїРµРєС‚РѕСЂР°, РјРё Р±СѓРґРµРјРѕ С€СѓРєР°С‚Рё Р№РѕРіРѕ СЃР°РјС–
+    private LevelSystem levelSystem;
+
     private void Awake()
     {
-        // Робимо так, щоб SaveManager НІКОЛИ не знищувався при перезавантаженні сцени
+        // рџ”Ґ Р’РРџР РђР’Р›Р•РќРћ: РўРµРїРµСЂ РѕР±'С”РєС‚ Р”Р†Р™РЎРќРћ РЅРµ Р·РЅРёС‰СѓС”С‚СЊСЃСЏ
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject); // Р¦СЊРѕРіРѕ СЂСЏРґРєР° РЅРµ РІРёСЃС‚Р°С‡Р°Р»Рѕ!
         }
         else
         {
@@ -27,10 +32,9 @@ public class SaveManager : MonoBehaviour
         }
 
         savePath = Application.persistentDataPath + "/savegame.json";
-        Debug.Log(Application.persistentDataPath + "/savegame.json");
+        Debug.Log("РЁР»СЏС… Р·Р±РµСЂРµР¶РµРЅРЅСЏ: " + savePath);
     }
 
-    // --- ПІДПИСКА НА ПОДІЮ ЗАВАНТАЖЕННЯ СЦЕНИ ---
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -41,7 +45,6 @@ public class SaveManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    // Цей метод автоматично спрацює ЩОРАЗУ, коли сцена завантажується чи перезапускається
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         Time.timeScale = 1f;
@@ -59,23 +62,25 @@ public class SaveManager : MonoBehaviour
 
         if (movement == null || hpSystem == null || attack == null) return;
 
+        // РЁСѓРєР°С”РјРѕ LevelSystem РґРёРЅР°РјС–С‡РЅРѕ, С‰РѕР± РЅРµ Р±СѓР»Рѕ РїРѕРјРёР»РѕРє
+        levelSystem = FindObjectOfType<LevelSystem>();
+
         PlayerSaveData data = new PlayerSaveData();
         data.savedSceneName = SceneManager.GetActiveScene().name;
-        //data.playerPosX = playerObj.transform.position.x;
-        //data.playerPosY = playerObj.transform.position.y;
-        //data.currentHP = hpSystem.HP;
+
         data.maxHP = hpSystem.MaxHP;
         data.defense = hpSystem.defense;
         data.damage = attack.attackDamage;
         data.canDash = movement.canDash;
         data.canDoubleJump = movement.canDoubleJump;
-        if(levelSystem != null)
+
+        if (levelSystem != null)
             data.currentLevel = levelSystem.LevelNumber;
 
         string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(savePath, json);
 
-        Debug.Log($"<color=green>Чекпоінт збережено!</color>");
+        Debug.Log($"<color=green>Р§РµРєРїРѕС–РЅС‚ Р·Р±РµСЂРµР¶РµРЅРѕ!</color>");
     }
 
     public void LoadGame()
@@ -83,7 +88,7 @@ public class SaveManager : MonoBehaviour
         if (!File.Exists(savePath)) return;
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj == null) return; // Якщо гравця ще немає, перериваємось
+        if (playerObj == null) return;
 
         PlayerMovement movement = playerObj.GetComponent<PlayerMovement>();
         HPSystem hpSystem = playerObj.GetComponent<HPSystem>();
@@ -94,16 +99,22 @@ public class SaveManager : MonoBehaviour
         string json = File.ReadAllText(savePath);
         PlayerSaveData data = JsonUtility.FromJson<PlayerSaveData>(json);
 
-        //playerObj.transform.position = new Vector2(data.playerPosX, data.playerPosY);
-        if(levelSystem != null && data.currentLevel > 0)
+        // рџ”Ґ Р’РРџР РђР’Р›Р•РќРћ: РЁСѓРєР°С”РјРѕ LevelSystem РЅР° РќРћР’Р†Р™ Р·Р°РІР°РЅС‚Р°Р¶РµРЅС–Р№ СЃС†РµРЅС–
+        levelSystem = FindObjectOfType<LevelSystem>();
+        if (levelSystem != null && data.currentLevel > 0)
+        {
             levelSystem.LevelNumber = data.currentLevel;
+        }
+
         hpSystem.MaxHP = data.maxHP;
-        hpSystem.HP = data.maxHP;
+        hpSystem.HP = data.maxHP; // Р’С–РґРЅРѕРІР»СЋС”РјРѕ Р·РґРѕСЂРѕРІ'СЏ РЅР° РјР°РєСЃРёРјСѓРј РїСЂРё Р·Р°РІР°РЅС‚Р°Р¶РµРЅРЅС–
         hpSystem.defense = data.defense;
         attack.attackDamage = data.damage;
         movement.canDash = data.canDash;
         movement.canDoubleJump = data.canDoubleJump;
 
+        // РћРЅРѕРІР»РµРЅРЅСЏ UI. (РЇРєС‰Рѕ С†С– С‚РµРєСЃС‚Рё Р·РЅРёС‰СѓСЋС‚СЊСЃСЏ РїСЂРё Р·РјС–РЅС– СЃС†РµРЅРё, РІРѕРЅРё С‚СѓС‚ РЅРµ РѕРЅРѕРІР»СЏС‚СЊСЃСЏ. 
+        // РќР°Р№РєСЂР°С‰Рµ, С‰РѕР± UI СЃР°Рј С‡РёС‚Р°РІ Р·РЅР°С‡РµРЅРЅСЏ Р· РіСЂР°РІС†СЏ Сѓ СЃРІРѕС”РјСѓ РјРµС‚РѕРґС– Start).
         if (Health != null && Defence != null && Damage != null)
         {
             Health.text = $"{hpSystem.MaxHP}";
@@ -116,63 +127,58 @@ public class SaveManager : MonoBehaviour
             hpSystem.HPBar.fillAmount = (float)hpSystem.HP / hpSystem.MaxHP;
         }
 
-        Debug.Log("<color=cyan>Прогрес успішно завантажено на новій сцені!</color>");
+        Debug.Log("<color=cyan>РџСЂРѕРіСЂРµСЃ СѓСЃРїС–С€РЅРѕ Р·Р°РІР°РЅС‚Р°Р¶РµРЅРѕ РЅР° РЅРѕРІС–Р№ СЃС†РµРЅС–!</color>");
     }
 
-    // --- ФІШКА ДЛЯ ТЕСТУВАННЯ В UNITY ---
-    // Додає кнопку прямо в інспектор скрипта, щоб швидко видалити збереження!
-    [ContextMenu("Видалити збереження (Очистити прогрес)")]
+    [ContextMenu("Р’РёРґР°Р»РёС‚Рё Р·Р±РµСЂРµР¶РµРЅРЅСЏ (РћС‡РёСЃС‚РёС‚Рё РїСЂРѕРіСЂРµСЃ)")]
     public void DeleteSaveFile()
     {
         if (File.Exists(savePath))
         {
             File.Delete(savePath);
-            Debug.Log("<color=red>Файл збереження видалено. Наступний запуск буде з самого початку!</color>");
+            Debug.Log("<color=red>Р¤Р°Р№Р» Р·Р±РµСЂРµР¶РµРЅРЅСЏ РІРёРґР°Р»РµРЅРѕ. РќР°СЃС‚СѓРїРЅРёР№ Р·Р°РїСѓСЃРє Р±СѓРґРµ Р· СЃР°РјРѕРіРѕ РїРѕС‡Р°С‚РєСѓ!</color>");
         }
         else
         {
-            Debug.Log("Файлу збереження і так немає.");
+            Debug.Log("Р¤Р°Р№Р»Сѓ Р·Р±РµСЂРµР¶РµРЅРЅСЏ С– С‚Р°Рє РЅРµРјР°С”.");
         }
     }
-    // --- МЕТОД ДЛЯ КНОПКИ В ГОЛОВНОМУ МЕНЮ ---
+
     public void ContinueGame()
     {
         if (File.Exists(savePath))
         {
-            // Читаємо файл, щоб дізнатися, на якому рівні ми були
             string json = File.ReadAllText(savePath);
             PlayerSaveData data = JsonUtility.FromJson<PlayerSaveData>(json);
 
-            // Якщо назва сцени не порожня, завантажуємо її
             if (!string.IsNullOrEmpty(data.savedSceneName))
             {
-                Debug.Log("Завантажуємо збережену сцену: " + data.savedSceneName);
+                Debug.Log("Р—Р°РІР°РЅС‚Р°Р¶СѓС”РјРѕ Р·Р±РµСЂРµР¶РµРЅСѓ СЃС†РµРЅСѓ: " + data.savedSceneName);
                 SceneManager.LoadScene(data.savedSceneName);
             }
             else
             {
-                Debug.LogWarning("У збереженні немає назви сцени! Запускаємо перший рівень.");
+                Debug.LogWarning("РЈ Р·Р±РµСЂРµР¶РµРЅРЅС– РЅРµРјР°С” РЅР°Р·РІРё СЃС†РµРЅРё! Р—Р°РїСѓСЃРєР°С”РјРѕ РїРµСЂС€РёР№ СЂС–РІРµРЅСЊ.");
                 SceneManager.LoadScene("Level Generator");
             }
         }
         else
         {
-            Debug.Log("Файлу збереження немає. Починаємо нову гру.");
+            Debug.Log("Р¤Р°Р№Р»Сѓ Р·Р±РµСЂРµР¶РµРЅРЅСЏ РЅРµРјР°С”. РџРѕС‡РёРЅР°С”РјРѕ РЅРѕРІСѓ РіСЂСѓ.");
             SceneManager.LoadScene("Level Generator");
         }
     }
-    // --- МЕТОД ДЛЯ КНОПКИ "ОЧИСТИТИ ЗБЕРЕЖЕННЯ" (В НАЛАШТУВАННЯХ) ---
+
     public void ResetProgress()
     {
-        // 1. Видаляємо файл прогресу (наш JSON)
         if (File.Exists(savePath))
         {
             File.Delete(savePath);
-            Debug.Log("<color=red>Прогрес гри повністю очищено!</color>");
+            Debug.Log("<color=red>РџСЂРѕРіСЂРµСЃ РіСЂРё РїРѕРІРЅС–СЃС‚СЋ РѕС‡РёС‰РµРЅРѕ!</color>");
         }
         else
         {
-            Debug.Log("Збережень і так немає.");
+            Debug.Log("Р—Р±РµСЂРµР¶РµРЅСЊ С– С‚Р°Рє РЅРµРјР°С”.");
         }
     }
 }
