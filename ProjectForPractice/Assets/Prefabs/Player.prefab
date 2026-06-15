@@ -193,6 +193,10 @@ MonoBehaviour:
   dashSpeed: 20
   dashDuration: 0.2
   dashCooldown: 1
+  dashIconUI: {fileID: 0}
+  dashCooldownText: {fileID: 0}
+  dashRequest: 0
+  isDashing: 0
 --- !u!95 &1689743682417654557
 Animator:
   serializedVersion: 5
@@ -275,12 +279,14 @@ MonoBehaviour:
   HP: 100
   MaxHP: 100
   defense: 1
+  isBoss: 0
   HPBar: {fileID: 0}
+  BossHPBar: {fileID: 0}
   invulnerabilityDuration: 1.5
   numberOfFlashes: 6
   spriteRenderer: {fileID: 0}
-  aSourse: {fileID: 0}
-  damageSound: {fileID: 0}
+  aSourse: {fileID: 2031054879}
+  damageSound: {fileID: 8300000, guid: 1880a938422bbd34eb1744708405870e, type: 3}
   damageVolume: 0.1
 --- !u!82 &2031054879
 AudioSource:

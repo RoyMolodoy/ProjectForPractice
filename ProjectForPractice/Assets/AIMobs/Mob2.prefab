@@ -107,12 +107,15 @@ MonoBehaviour:
   HP: 3
   MaxHP: 3
   defense: 1
+  isBoss: 0
   HPBar: {fileID: 0}
+  BossHPBar: {fileID: 0}
   invulnerabilityDuration: 1.5
   numberOfFlashes: 6
   spriteRenderer: {fileID: 0}
   aSourse: {fileID: 5196996263854882889}
   damageSound: {fileID: 8300000, guid: 419d7dbf0158ff441aff4254f36bbf5c, type: 3}
+  deathSound: {fileID: 8300000, guid: f50566d01d7da6a43a767ad446a73fc6, type: 3}
   damageVolume: 0.1
 --- !u!114 &209783795677323916
 MonoBehaviour:
@@ -151,10 +154,8 @@ MonoBehaviour:
   damage: 1
   attackDuration: 0.6
   attackHitDelay: 0.4
-  audioSource: {fileID: 0}
-  attackSound: {fileID: 0}
-  deathSound: {fileID: 0}
-  damageSound: {fileID: 0}
+  audioSource: {fileID: 5196996263854882889}
+  attackSound: {fileID: 8300000, guid: 6678f0cefa4c05549809ae2d0d7cfdca, type: 3}
 --- !u!50 &209783795677323917
 Rigidbody2D:
   serializedVersion: 4
@@ -247,7 +248,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.33
   m_Pitch: 1
   Loop: 0
   Mute: 0

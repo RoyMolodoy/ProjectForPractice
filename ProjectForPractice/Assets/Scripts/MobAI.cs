@@ -52,8 +52,6 @@ public class MobAI : MonoBehaviour
 
     public AudioSource audioSource;
     public AudioClip attackSound;
-    public AudioClip deathSound;
-    public AudioClip damageSound;
 
     private void Awake()
     {

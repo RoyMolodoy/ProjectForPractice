@@ -21,6 +21,7 @@ public class HPSystem : MonoBehaviour
     private bool _isInvulnerable = false;
     public AudioSource aSourse;
     public AudioClip damageSound;
+    public AudioClip deathSound;
     [Range(0, 1)]
     public float damageVolume = 0.1f;
 
@@ -64,7 +65,11 @@ public class HPSystem : MonoBehaviour
                 {
                     gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
                     gameObject.GetComponent<Collider2D>().enabled = false;
+                    PlayerMovement playerMovement = GetComponent<PlayerMovement>();
+                    if(playerMovement != null)
+                        playerMovement.enabled = false;
                     animsController.DeathAnim();
+                    aSourse.PlayOneShot(deathSound);
                 }
             }
             else

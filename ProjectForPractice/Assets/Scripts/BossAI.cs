@@ -38,6 +38,10 @@ public class BossAI : MonoBehaviour
 
     private bool _isDead = false;
 
+    public AudioSource audioSource;
+    public AudioClip beamAttack;
+    public AudioClip headAttack;
+
     private void Awake()
     {
         if (HP == null) HP = GetComponent<HPSystem>();
@@ -115,6 +119,10 @@ public class BossAI : MonoBehaviour
     {
         _isAttacking = true;
         if (_anim != null) _anim.SetBool("BeamAttack", true);
+        if(audioSource != null)
+        {
+            audioSource.PlayOneShot(beamAttack);
+        }
 
         yield return new WaitForSeconds(0.6f);
 
@@ -138,6 +146,10 @@ public class BossAI : MonoBehaviour
     {
         _isAttacking = true;
         if (_anim != null) _anim.SetBool("HeadAttack", true);
+        if (audioSource != null)
+        {
+            audioSource.PlayOneShot(headAttack);
+        }
 
         yield return new WaitForSeconds(1f);
 
