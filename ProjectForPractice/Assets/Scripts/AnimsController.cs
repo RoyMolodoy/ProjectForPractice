@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using System;
+﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class AnimsController : MonoBehaviour
 {
     [SerializeField] bool isPlayer = false;
     [SerializeField] private float timeToDestroy = 5.0f;
     [SerializeField] Animator animator;
+    private GameObject _player;
     private Collider2D col;
     private Rigidbody2D rb;
 
@@ -33,6 +35,11 @@ public class AnimsController : MonoBehaviour
 
     void Awake()
     {
+        if (!isPlayer)
+        {
+            _player = GameObject.FindGameObjectWithTag("Player");
+        }
+
         if (isPlayer == false)
         {
             mob = GetComponent<MobAI>();
@@ -126,7 +133,11 @@ public class AnimsController : MonoBehaviour
         if (isPlayer == false && mob != null)
         {
             mob.enabled = false;
-            rb.isKinematic = true;
+
+            HPSystem playerHP = _player.GetComponent<HPSystem>();
+            if (playerHP != null)
+                playerHP.PlusHP(5);
+
             Destroy(col);
             Destroy(gameObject, timeToDestroy);
         }

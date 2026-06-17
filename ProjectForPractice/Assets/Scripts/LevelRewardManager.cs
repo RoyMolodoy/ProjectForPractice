@@ -49,7 +49,6 @@ public class LevelRewardManager : MonoBehaviour
 
         skillFunctions = new Dictionary<SkillType, Action<GameObject, SkillData>>
         {
-            { SkillType.HealFull, ApplyHealFull },
             { SkillType.MaxHPUp, ApplyMaxHPUp },
             { SkillType.DefenseUp, ApplyDefenseUp },
             { SkillType.DamageUp, ApplyDamageUp },
@@ -284,12 +283,6 @@ public class LevelRewardManager : MonoBehaviour
     // =========================================================
     // --- ОКРЕМІ ФУНКЦІЇ ДЛЯ КОЖНОГО СКІЛА ---
     // =========================================================
-
-    private void ApplyHealFull(GameObject player, SkillData skill)
-    {
-        var hpSystemFull = player.GetComponent<HPSystem>();
-        if (hpSystemFull != null) hpSystemFull.PlusHP(999);
-    }
 
     private void ApplyMaxHPUp(GameObject player, SkillData skill)
     {

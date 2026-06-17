@@ -79,8 +79,9 @@ public class HPSystem : MonoBehaviour
             {
                 if (HP + minusHP > 0)
                 {
-                    gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
-                    gameObject.GetComponent<Collider2D>().enabled = false;
+                    gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionX |
+                         RigidbodyConstraints2D.FreezePositionY |
+                         RigidbodyConstraints2D.FreezeRotation;
                     PlayerMovement playerMovement = GetComponent<PlayerMovement>();
                     PlayerAttack playerAttack = GetComponent<PlayerAttack>();
 

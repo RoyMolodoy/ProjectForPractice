@@ -5908,6 +5908,14 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1563469727}
+    - target: {fileID: 4208450205943887304, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
+      propertyPath: m_text
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4208450205954095470, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
+      propertyPath: m_text
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 4208450206271621690, guid: 0c4b7d02ec86d8246ace0343b1f8d5db, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -60
@@ -8303,7 +8311,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1689743682417654564, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
       propertyPath: HP
-      value: 10
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 1689743682417654564, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
       propertyPath: HPBar
@@ -8311,7 +8319,7 @@ PrefabInstance:
       objectReference: {fileID: 238845259}
     - target: {fileID: 1689743682417654564, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
       propertyPath: MaxHP
-      value: 10
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 1689743682417654564, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
       propertyPath: deathScreenPanel
@@ -8327,7 +8335,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1689743682417654565, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
       propertyPath: attackDamage
-      value: 1
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1689743682462571319, guid: 856d796e1aa3fd44ca82b278226e8d2e, type: 3}
       propertyPath: m_TagString

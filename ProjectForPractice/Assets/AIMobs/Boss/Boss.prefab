@@ -72,7 +72,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6068839423411600306}
   - component: {fileID: 5906807471387520719}
-  - component: {fileID: 6459234442507142370}
   - component: {fileID: 2393417924929001701}
   - component: {fileID: 1398769622665473511}
   - component: {fileID: 2393417924929001700}
@@ -156,18 +155,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6459234442507142370
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8831602977527008640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a74913a6547d474eafc020e250bbc5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2393417924929001701
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -274,6 +261,9 @@ MonoBehaviour:
   invulnerabilityDuration: 1.5
   numberOfFlashes: 6
   spriteRenderer: {fileID: 0}
+  deathScreenPanel: {fileID: 0}
+  deathFadeDuration: 1.5
+  maxDeathAlpha: 0.8
   aSourse: {fileID: 0}
   damageSound: {fileID: 8300000, guid: 419d7dbf0158ff441aff4254f36bbf5c, type: 3}
   deathSound: {fileID: 8300000, guid: 15957fcf3dcfd1c4481d5628c4e21287, type: 3}
